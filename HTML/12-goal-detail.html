@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Goal Details - PennyWise</title>
+<!-- Fonts: Inter -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Iconify (Lucide Icons) -->
+<script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+<script>
+tailwind.config = {
+theme: {
+extend: {
+fontFamily: {
+sans: ['Inter', 'sans-serif'],
+},
+colors: {
+emerald: {
+50: '#ECFDF5',
+100: '#D1FAE5',
+500: '#10B981', // Primary
+600: '#059669', // Secondary
+900: '#064E3B',
+},
+gray: {
+50: '#F9FAFB', // Background
+100: '#F3F4F6',
+200: '#E5E7EB',
+300: '#D1D5DB',
+400: '#9CA3AF',
+500: '#6B7280',
+600: '#4B5563',
+700: '#374151',
+800: '#1F2937',
+900: '#111827', // Text
+},
+danger: '#EF4444',
+warning: '#F59E0B',
+},
+borderRadius: {
+'card': '12px',
+'btn': '8px',
+},
+boxShadow: {
+'card': '0 1px 3px 0 rgba(0, 0, 0, 0.08), 0 1px 2px -1px rgba(0, 0, 0, 0.08)',
+'drawer': '-4px 0 24px rgba(0,0,0,0.08)',
+}
+}
+}
+}
+</script>
+<style>
+.no-scrollbar::-webkit-scrollbar {
+display: none;
+}
+.no-scrollbar {
+-ms-overflow-style: none;
+scrollbar-width: none;
+}
+.form-input {
+width: 100%;
+padding: 0.75rem 0.875rem;
+border: 1px solid #E5E7EB;
+border-radius: 8px;
+font-size: 0.875rem;
+color: #111827;
+background-color: #FFFFFF;
+transition: border-color 0.15s, box-shadow 0.15s;
+}
+.form-input:focus {
+outline: none;
+border-color: #10B981;
+box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+</style></head>
+<body class="bg-gray-50 min-h-screen w-full font-sans antialiased text-gray-900 flex overflow-hidden">
+
+    <!-- Mobile Overlay for Sidebar -->
+    <div id="mobileOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-gray-900/50 z-40 hidden lg:hidden backdrop-blur-sm transition-opacity"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-[240px] bg-white border-r border-gray-200 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col h-full">
+        <div class="h-16 flex items-center px-6 border-b border-gray-100">
+            <div class="flex items-center gap-2 text-emerald-600">
+                <span class="iconify" data-icon="lucide:leaf" data-width="24" style="stroke-width: 1.5;"></span>
+                <span class="text-lg font-bold tracking-tight text-gray-900">PennyWise</span>
+            </div>
+        </div>
+        <nav class="flex-1 overflow-y-auto py-6 px-3 space-y-1">
+            <a href="./06-dashboard.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-btn text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-medium group transition-colors">
+                <span class="iconify text-gray-400 group-hover:text-gray-600" data-icon="lucide:layout-dashboard" data-width="20" style="stroke-width: 1.5;"></span>
+                Dashboard
+            </a>
+            <a href="./07-budgets-list.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-btn text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-medium group transition-colors">
+                <span class="iconify text-gray-400 group-hover:text-gray-600" data-icon="lucide:wallet" data-width="20" style="stroke-width: 1.5;"></span>
+                Budgets
+            </a>
+            <a href="./09-transactions-list.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-btn text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-medium group transition-colors">
+                <span class="iconify text-gray-400 group-hover:text-gray-600" data-icon="lucide:arrow-left-right" data-width="20" style="stroke-width: 1.5;"></span>
+                Transactions
+            </a>
+            <!-- Active State -->
+            <a href="./11-goals-list.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-btn bg-emerald-50 text-emerald-600 font-medium group transition-colors">
+                <span class="iconify" data-icon="lucide:target" data-width="20" style="stroke-width: 1.5;"></span>
+                Goals
+            </a>
+            <a href="./13-analytics.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-btn text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-medium group transition-colors">
+                <span class="iconify text-gray-400 group-hover:text-gray-600" data-icon="lucide:bar-chart-3" data-width="20" style="stroke-width: 1.5;"></span>
+                Analytics
+            </a>
+            <a href="./14-settings.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-btn text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-medium group transition-colors">
+                <span class="iconify text-gray-400 group-hover:text-gray-600" data-icon="lucide:settings" data-width="20" style="stroke-width: 1.5;"></span>
+                Settings
+            </a>
+        </nav>
+        <div class="p-4 border-t border-gray-100">
+            <div class="flex items-center gap-3 p-2 rounded-btn hover:bg-gray-50 cursor-pointer transition-colors">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="User" class="w-9 h-9 rounded-full bg-gray-100 border border-gray-200">
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-semibold text-gray-900 truncate">Alex Morgan</p>
+                    <p class="text-xs text-gray-500 truncate">alex@pennywise.app</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 h-screen overflow-y-auto lg:pl-[240px] relative w-full">
+        <div class="max-w-[600px] mx-auto p-4 sm:p-6 lg:p-8">
+            
+            <!-- Mobile Menu Trigger -->
+            <button onclick="toggleSidebar()" class="lg:hidden p-2 -ml-2 mb-4 rounded-btn text-gray-600 hover:bg-gray-100">
+                <span class="iconify" data-icon="lucide:menu" data-width="24"></span>
+            </button>
+
+            <!-- Navigation Breadcrumb -->
+            <a href="./11-goals-list.html" class="inline-flex items-center gap-1.5 text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors mb-6 group">
+                <span class="iconify group-hover:-translate-x-0.5 transition-transform" data-icon="lucide:arrow-left" data-width="16"></span>
+                Back to Goals
+            </a>
+            
+            <!-- Goal Header -->
+            <div class="flex items-start justify-between gap-4 mb-8">
+                <div class="flex items-start gap-4">
+                    <div class="p-3 bg-emerald-50 text-emerald-600 rounded-xl mt-1 hidden sm:flex">
+                        <span class="iconify" data-icon="lucide:shield" data-width="28"></span>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-semibold tracking-tight text-gray-900">Emergency Fund</h1>
+                        <p class="text-base text-gray-500 mt-1">Safety net for unexpected expenses</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button class="p-2 text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-btn transition-colors" title="Edit Goal">
+                        <span class="iconify" data-icon="lucide:pencil" data-width="20"></span>
+                    </button>
+                    <button class="p-2 text-gray-400 hover:text-danger hover:bg-red-50 rounded-btn transition-colors" title="Delete Goal">
+                        <span class="iconify" data-icon="lucide:trash-2" data-width="20"></span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Progress Section -->
+            <div class="bg-white rounded-card shadow-card border border-gray-100 p-6 sm:p-8 mb-8">
+                
+                <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2 mb-4">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">Total Saved</p>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-4xl font-bold tracking-tight text-gray-900">$8,500</span>
+                            <span class="text-lg font-medium text-gray-400">/ $12,000</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1.5 bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-sm font-medium self-start sm:self-auto mb-1">
+                        <span class="iconify" data-icon="lucide:trending-up" data-width="16"></span>
+                        On Track
+                    </div>
+                </div>
+
+                <!-- Main Progress Bar -->
+                <div class="w-full bg-gray-100 rounded-full h-4 mb-8 overflow-hidden">
+                    <div class="bg-emerald-500 h-4 rounded-full transition-all duration-1000 ease-out relative" style="width: 70%">
+                        <div class="absolute inset-0 bg-white/20 animate-[pulse_2s_ease-in-out_infinite]"></div>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-gray-50 pt-6">
+                    <div class="flex flex-col">
+                        <span class="text-xs uppercase tracking-wide font-semibold text-gray-400 mb-1">Progress</span>
+                        <span class="text-lg font-semibold text-gray-900">70.8%</span>
+                    </div>
+                    <div class="flex flex-col relative sm:before:absolute sm:before:left-0 sm:before:top-2 sm:before:bottom-2 sm:before:w-px sm:before:bg-gray-100 sm:pl-4">
+                        <span class="text-xs uppercase tracking-wide font-semibold text-gray-400 mb-1">Days Remaining</span>
+                        <span class="text-lg font-semibold text-gray-900">245 Days</span>
+                    </div>
+                    <div class="flex flex-col relative sm:before:absolute sm:before:left-0 sm:before:top-2 sm:before:bottom-2 sm:before:w-px sm:before:bg-gray-100 sm:pl-4">
+                        <span class="text-xs uppercase tracking-wide font-semibold text-gray-400 mb-1">Monthly Need</span>
+                        <span class="text-lg font-semibold text-emerald-600">$437.50</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contribution History -->
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xl font-semibold text-gray-900">Contribution History</h2>
+                    <button onclick="openModal()" class="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-white text-sm font-medium shadow-sm shadow-emerald-500/20 transition-all">
+                        <span class="iconify" data-icon="lucide:plus" data-width="18" style="stroke-width: 2;"></span>
+                        Add Funds
+                    </button>
+                </div>
+
+                <!-- History List -->
+                <div class="bg-white rounded-card shadow-card border border-gray-100 overflow-hidden">
+                    <!-- Item 1 -->
+                    <div class="flex items-center justify-between p-4 border-b border-gray-50 hover:bg-gray-50/50 transition-colors group">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
+                                <span class="iconify" data-icon="lucide:arrow-up-right" data-width="20"></span>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">Auto-deposit</p>
+                                <p class="text-xs text-gray-500">Today, 9:41 AM</p>
+                            </div>
+                        </div>
+                        <span class="text-sm font-semibold text-emerald-600">+$500.00</span>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="flex items-center justify-between p-4 border-b border-gray-50 hover:bg-gray-50/50 transition-colors group">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
+                                <span class="iconify" data-icon="lucide:piggy-bank" data-width="20"></span>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">Bonus Allocation</p>
+                                <p class="text-xs text-gray-500">Apr 15, 2024</p>
+                            </div>
+                        </div>
+                        <span class="text-sm font-semibold text-emerald-600">+$1,200.00</span>
+                    </div>
+
+                    <!-- Item 3 -->
+                    <div class="flex items-center justify-between p-4 border-b border-gray-50 hover:bg-gray-50/50 transition-colors group">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
+                                <span class="iconify" data-icon="lucide:arrow-up-right" data-width="20"></span>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">Auto-deposit</p>
+                                <p class="text-xs text-gray-500">Mar 15, 2024</p>
+                            </div>
+                        </div>
+                        <span class="text-sm font-semibold text-emerald-600">+$500.00</span>
+                    </div>
+
+                     <!-- Item 4 (Withdrawal example) -->
+                     <div class="flex items-center justify-between p-4 hover:bg-gray-50/50 transition-colors group">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-orange-50 text-orange-600 flex items-center justify-center flex-shrink-0">
+                                <span class="iconify" data-icon="lucide:arrow-down-left" data-width="20"></span>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">Car Repair (Withdrawal)</p>
+                                <p class="text-xs text-gray-500">Feb 28, 2024</p>
+                            </div>
+                        </div>
+                        <span class="text-sm font-semibold text-gray-900">-$350.00</span>
+                    </div>
+                </div>
+
+                <div class="text-center pt-2">
+                    <button class="text-sm text-gray-400 hover:text-emerald-600 font-medium transition-colors">View all activity</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add Contribution Modal -->
+    <div id="contributionModal" class="fixed inset-0 z-[60] hidden">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-gray-900/40 backdrop-blur-[2px] transition-opacity duration-300" onclick="closeModal()"></div>
+        
+        <!-- Modal Content -->
+        <div class="absolute inset-x-0 bottom-0 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 w-full sm:w-[440px] bg-white sm:rounded-card rounded-t-[20px] shadow-xl flex flex-col animate-in fade-in zoom-in slide-in-from-bottom-4 duration-200">
+            <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+                <h3 class="text-lg font-semibold text-gray-900">Add Contribution</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-100 transition-colors">
+                    <span class="iconify" data-icon="lucide:x" data-width="20"></span>
+                </button>
+            </div>
+            
+            <div class="p-6 space-y-5">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Amount</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <span class="text-gray-400 font-medium text-lg">$</span>
+                        </div>
+                        <input type="number" placeholder="0.00" class="form-input pl-9 text-lg font-medium" autofocus="">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+                    <input type="date" class="form-input" value="2024-05-15">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Note (Optional)</label>
+                    <input type="text" placeholder="e.g. Monthly savings" class="form-input">
+                </div>
+            </div>
+
+            <div class="p-6 border-t border-gray-100 bg-gray-50 sm:rounded-b-card flex justify-end gap-3">
+                <button onclick="closeModal()" class="px-4 py-2.5 rounded-btn border border-gray-200 bg-white text-gray-700 font-medium hover:bg-gray-50 hover:border-gray-300 transition-all">Cancel</button>
+                <button onclick="closeModal()" class="flex-1 sm:flex-none px-4 py-2.5 rounded-lg bg-emerald-500 text-white text-sm font-medium hover:bg-emerald-600 active:bg-emerald-700 shadow-sm shadow-emerald-500/20 transition-all">Add Funds</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+        const modal = document.getElementById('contributionModal');
+
+        function toggleSidebar() {
+            const isClosed = sidebar.classList.contains('-translate-x-full');
+            if (isClosed) {
+                sidebar.classList.remove('-translate-x-full');
+                mobileOverlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                mobileOverlay.classList.add('hidden');
+            }
+        }
+
+        function openModal() {
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape") {
+                closeModal();
+                if(!sidebar.classList.contains('-translate-x-full')) toggleSidebar();
+            }
+        });
+    </script>
+
+</body></html>

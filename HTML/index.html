@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PennyWise - Personal Finance</title>
+<!-- Fonts: Inter & JetBrains Mono -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Iconify (Lucide Icons) -->
+<script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+<script>
+tailwind.config = {
+theme: {
+extend: {
+fontFamily: {
+sans: ['Inter', 'sans-serif'],
+mono: ['JetBrains Mono', 'monospace'],
+},
+colors: {
+emerald: {
+50: '#ECFDF5', // Primary Light
+500: '#10B981', // Primary / Success
+600: '#059669', // Secondary
+},
+gray: {
+50: '#F9FAFB', // Background
+200: '#E5E7EB', // Border
+500: '#6B7280', // Text Secondary
+700: '#374151', // Text Body
+900: '#111827', // Text Primary
+}
+},
+animation: {
+'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+'float': 'float 3s ease-in-out infinite',
+},
+keyframes: {
+float: {
+'0%, 100%': { transform: 'translateY(0)' },
+'50%': { transform: 'translateY(-10px)' },
+}
+}
+}
+}
+}
+</script>
+<style>
+/* Custom Smooth Fade Transition */
+.fade-out {
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.8s ease-in-out;
+}
+/* Logo Pulse Animation */
+@keyframes subtle-breath {
+0%, 100% { transform: scale(1); opacity: 1; }
+50% { transform: scale(1.05); opacity: 0.9; }
+}
+.brand-pulse {
+animation: subtle-breath 2.5s ease-in-out infinite;
+}
+/* Hide scrollbar during splash */
+body.loading {
+overflow: hidden;
+}
+</style></head>
+<body class="bg-gray-50 text-gray-900 font-sans antialiased h-screen w-full relative loading">
+
+    <!-- 
+      SCREEN: 01-splash
+      This is the primary requested screen. 
+      It sits on top of the "app" with a high z-index.
+    -->
+    <div id="splash-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-emerald-500 w-full h-full">
+        <!-- Center Content -->
+        <div class="flex flex-col items-center gap-6 brand-pulse">
+            <!-- Logo Icon (White) -->
+            <div class="bg-white/10 p-4 rounded-2xl backdrop-blur-sm border border-white/20 shadow-xl">
+                <span class="iconify text-white" data-icon="lucide:wallet" data-width="48" data-height="48" style="stroke-width: 1.5;"></span>
+            </div>
+            
+            <!-- Logo Text -->
+            <div class="flex flex-col items-center">
+                <h1 class="text-3xl md:text-4xl font-semibold text-white tracking-tight">
+                    PennyWise
+                </h1>
+                <p class="text-emerald-50 text-sm font-medium mt-2 tracking-wide opacity-90">
+                    Smart Personal Finance
+                </p>
+            </div>
+        </div>
+
+        <!-- Bottom Loading Indicator -->
+        <div class="absolute bottom-12">
+            <div class="flex space-x-2 justify-center items-center">
+                <div class="h-1.5 w-1.5 bg-white rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                <div class="h-1.5 w-1.5 bg-white rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                <div class="h-1.5 w-1.5 bg-white rounded-full animate-bounce"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 
+       SCREEN: 02-login (Simulated Destination)
+       This is hidden initially behind the splash screen.
+       Used to demonstrate the redirect functionality.
+    -->
+    <div id="login-container" class="min-h-screen flex items-center justify-center p-4">
+        <div class="w-full max-w-md bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <!-- Header -->
+            <div class="p-8 text-center border-b border-gray-100">
+                <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-emerald-50 text-emerald-500 mb-4">
+                     <span class="iconify" data-icon="lucide:wallet" data-width="24" data-height="24"></span>
+                </div>
+                <h2 class="text-2xl font-semibold tracking-tight text-gray-900">Welcome back</h2>
+                <p class="text-sm text-gray-500 mt-2">Enter your credentials to access your budget.</p>
+            </div>
+
+            <!-- Form -->
+            <div class="p-8 space-y-6">
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-700 block">Email address</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
+                            <span class="iconify" data-icon="lucide:mail" data-width="18"></span>
+                        </span>
+                        <input type="email" placeholder="name@example.com" class="w-full pl-10 pr-4 h-12 rounded-lg border border-gray-200 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all text-sm text-gray-900 placeholder:text-gray-400 font-normal">
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center">
+                        <label class="text-sm font-medium text-gray-700">Password</label>
+                        <a href="./04-forgot-password.html" class="text-xs font-medium text-emerald-600 hover:text-emerald-500">Forgot password?</a>
+                    </div>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
+                            <span class="iconify" data-icon="lucide:lock" data-width="18"></span>
+                        </span>
+                        <input type="password" placeholder="••••••••" class="w-full pl-10 pr-4 h-12 rounded-lg border border-gray-200 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all text-sm text-gray-900 placeholder:text-gray-400 font-normal">
+                    </div>
+                </div>
+
+                <button id="signInBtn" class="w-full h-11 bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-white text-sm font-medium rounded-lg shadow-sm shadow-emerald-500/20 transition-all duration-200 flex items-center justify-center gap-2">
+                    Sign in
+                </button>
+            </div>
+            
+            <div class="px-8 py-4 bg-gray-50 border-t border-gray-100 text-center">
+                <p class="text-xs text-gray-500">
+                    Don't have an account? <a href="./03-signup.html" class="text-emerald-600 font-medium hover:text-emerald-500">Sign up</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Redirect Logic Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const splash = document.getElementById('splash-screen');
+            const body = document.body;
+
+            // Wait 2 seconds (2000ms) then fade out
+            setTimeout(() => {
+                splash.classList.add('fade-out');
+
+                // Remove from DOM or just hide after transition completes
+                setTimeout(() => {
+                    body.classList.remove('loading');
+                    splash.style.display = 'none';
+                }, 800); // Wait for CSS transition (0.8s)
+            }, 2000);
+
+            // Login form handler
+            const signInBtn = document.getElementById('signInBtn');
+            if (signInBtn) {
+                signInBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const email = document.querySelector('input[type="email"]');
+                    const password = document.querySelector('input[type="password"]');
+                    if (email && password) {
+                        if (email.value === 'demo@demo.com' && password.value === '1234') {
+                            location.href = './06-dashboard.html';
+                        } else if (email.value && password.value) {
+                            location.href = './06-dashboard.html';
+                        } else {
+                            alert('Demo account: demo@demo.com / 1234');
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+
+</body></html>

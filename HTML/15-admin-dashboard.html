@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard - PennyWise</title>
+<!-- Fonts: Inter -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Iconify (Lucide Icons) -->
+<script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+<script>
+tailwind.config = {
+theme: {
+extend: {
+fontFamily: {
+sans: ['Inter', 'sans-serif'],
+},
+colors: {
+emerald: {
+50: '#ECFDF5',
+100: '#D1FAE5',
+200: '#A7F3D0',
+300: '#6EE7B7',
+400: '#34D399',
+500: '#10B981', // Primary
+600: '#059669', // Secondary
+700: '#047857',
+800: '#065F46',
+900: '#064E3B',
+},
+gray: {
+50: '#F9FAFB', // Background
+100: '#F3F4F6',
+200: '#E5E7EB',
+300: '#D1D5DB',
+400: '#9CA3AF',
+500: '#6B7280',
+600: '#4B5563',
+700: '#374151',
+800: '#1F2937',
+900: '#111827', // Text
+},
+danger: '#EF4444',
+warning: '#F59E0B',
+},
+borderRadius: {
+'card': '12px',
+'btn': '8px',
+},
+boxShadow: {
+'card': '0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05)',
+'subtle': '0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02)',
+}
+}
+}
+}
+</script>
+<style>
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+/* Custom Inputs */
+.form-select {
+background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+background-position: right 0.5rem center;
+background-repeat: no-repeat;
+background-size: 1.5em 1.5em;
+padding-right: 2.5rem;
+-webkit-appearance: none;
+appearance: none;
+}
+/* Chart Animations */
+.chart-path {
+stroke-dasharray: 1000;
+stroke-dashoffset: 1000;
+animation: dash 2s ease-out forwards;
+}
+@keyframes dash {
+to { stroke-dashoffset: 0; }
+}
+.bar-fill {
+width: 0;
+animation: fillBar 1s ease-out forwards;
+}
+@keyframes fillBar {
+to { width: var(--width); }
+}
+</style></head>
+<body class="bg-gray-50 min-h-screen w-full font-sans antialiased text-gray-900 flex overflow-hidden">
+
+    <!-- Mobile Overlay -->
+    <div id="mobileOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-gray-900/50 z-40 hidden lg:hidden backdrop-blur-sm transition-opacity"></div>
+
+    <!-- Admin Sidebar -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-[260px] bg-white border-r border-gray-200 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col h-full shadow-card lg:shadow-none">
+        <!-- Header -->
+        <div class="h-16 flex items-center px-6 border-b border-gray-100">
+            <div class="flex items-center gap-2 text-emerald-600">
+                <span class="iconify" data-icon="lucide:leaf" data-width="24" style="stroke-width: 1.5;"></span>
+                <span class="text-lg font-bold tracking-tight text-gray-900">PennyWise</span>
+                <span class="px-2 py-0.5 rounded-full bg-gray-100 text-gray-500 text-[10px] font-bold uppercase tracking-wider border border-gray-200 ml-1">Admin</span>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 overflow-y-auto py-6 px-3 space-y-1">
+            <a href="./15-admin-dashboard.html" class="flex items-center gap-3 px-3 py-2.5 rounded-btn bg-emerald-50 text-emerald-700 font-medium group transition-colors">
+                <span class="iconify" data-icon="lucide:layout-dashboard" data-width="20" style="stroke-width: 1.5;"></span>
+                Dashboard
+            </a>
+
+            <div class="px-3 pt-4 pb-2">
+                <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Platform</p>
+            </div>
+
+            <a href="./16-user-management.html" class="flex items-center gap-3 px-3 py-2.5 rounded-btn text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-medium group transition-colors">
+                <span class="iconify text-gray-400 group-hover:text-gray-600" data-icon="lucide:users" data-width="20" style="stroke-width: 1.5;"></span>
+                User Management
+            </a>
+            <a href="./17-category-management.html" class="flex items-center gap-3 px-3 py-2.5 rounded-btn text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-medium group transition-colors">
+                <span class="iconify text-gray-400 group-hover:text-gray-600" data-icon="lucide:tags" data-width="20" style="stroke-width: 1.5;"></span>
+                Categories
+            </a>
+            <a href="./18-platform-analytics.html" class="flex items-center gap-3 px-3 py-2.5 rounded-btn text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-medium group transition-colors">
+                <span class="iconify text-gray-400 group-hover:text-gray-600" data-icon="lucide:bar-chart-3" data-width="20" style="stroke-width: 1.5;"></span>
+                Platform Analytics
+            </a>
+
+            <div class="px-3 pt-4 pb-2">
+                <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">System</p>
+            </div>
+
+            <a href="./19-support-tickets.html" class="flex items-center gap-3 px-3 py-2.5 rounded-btn text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-medium group transition-colors">
+                <div class="relative">
+                    <span class="iconify text-gray-400 group-hover:text-gray-600" data-icon="lucide:ticket" data-width="20" style="stroke-width: 1.5;"></span>
+                    <span class="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-danger opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-danger"></span>
+                    </span>
+                </div>
+                Support Tickets
+            </a>
+            <a href="./20-admin-settings.html" class="flex items-center gap-3 px-3 py-2.5 rounded-btn text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-medium group transition-colors">
+                <span class="iconify text-gray-400 group-hover:text-gray-600" data-icon="lucide:settings-2" data-width="20" style="stroke-width: 1.5;"></span>
+                Admin Settings
+            </a>
+        </nav>
+
+        <!-- Admin Profile -->
+        <div class="p-4 border-t border-gray-100">
+            <div class="flex items-center gap-3 p-2 rounded-btn hover:bg-gray-50 cursor-pointer transition-colors border border-transparent hover:border-gray-200">
+                <div class="relative">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Admin" alt="Admin" class="w-9 h-9 rounded-full bg-gray-100 border border-gray-200">
+                    <div class="absolute -bottom-0.5 -right-0.5 bg-emerald-500 rounded-full p-0.5 border-2 border-white">
+                        <span class="iconify text-white" data-icon="lucide:shield-check" data-width="10"></span>
+                    </div>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-semibold text-gray-900 truncate">System Admin</p>
+                    <p class="text-xs text-gray-500 truncate">admin@pennywise.app</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 h-screen overflow-y-auto lg:pl-[260px] relative w-full scroll-smooth">
+        <div class="max-w-[1600px] mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+            
+            <!-- Mobile Trigger & Page Header -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
+                <div class="flex items-center gap-4">
+                    <button onclick="toggleSidebar()" class="lg:hidden p-2 -ml-2 rounded-btn text-gray-600 hover:bg-gray-100">
+                        <span class="iconify" data-icon="lucide:menu" data-width="24"></span>
+                    </button>
+                    <div>
+                        <h1 class="text-2xl font-bold tracking-tight text-gray-900">Dashboard Overview</h1>
+                        <p class="text-sm text-gray-500 mt-0.5">Welcome back, Admin. Here's what's happening today.</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                    <div class="relative">
+                        <select class="form-select bg-white border border-gray-200 text-gray-700 text-sm rounded-btn shadow-sm focus:ring-emerald-500 focus:border-emerald-500 block p-2.5 pr-10 font-medium">
+                            <option>Today</option>
+                            <option selected="">Last 7 Days</option>
+                            <option>Last 30 Days</option>
+                            <option>Custom Range</option>
+                        </select>
+                    </div>
+                    <button class="p-2.5 bg-white border border-gray-200 text-gray-500 rounded-btn hover:text-emerald-600 hover:border-emerald-200 shadow-sm transition-colors">
+                        <span class="iconify" data-icon="lucide:download" data-width="20"></span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 1. Statistics Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Card 1 -->
+                <div class="bg-white p-5 rounded-card shadow-card border border-gray-200 hover:shadow-subtle transition-shadow">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-2 bg-emerald-50 rounded-lg text-emerald-600">
+                            <span class="iconify" data-icon="lucide:users" data-width="20"></span>
+                        </div>
+                        <span class="flex items-center text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full border border-emerald-100">
+                            <span class="iconify mr-1" data-icon="lucide:trending-up" data-width="12"></span>
+                            +12%
+                        </span>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Total Users</p>
+                        <h3 class="text-2xl font-bold text-gray-900 tracking-tight mt-1">24,592</h3>
+                    </div>
+                    <div class="mt-3 flex items-center gap-2">
+                        <span class="flex items-center justify-center bg-gray-100 text-gray-600 text-[10px] font-bold px-1.5 py-0.5 rounded-md">
+                            +128 today
+                        </span>
+                        <span class="text-xs text-gray-400">vs. yesterday</span>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-white p-5 rounded-card shadow-card border border-gray-200 hover:shadow-subtle transition-shadow">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-2 bg-blue-50 rounded-lg text-blue-600">
+                            <span class="iconify" data-icon="lucide:activity" data-width="20"></span>
+                        </div>
+                        <span class="flex items-center text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full border border-emerald-100">
+                            <span class="iconify mr-1" data-icon="lucide:trending-up" data-width="12"></span>
+                            +5.4%
+                        </span>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Active Users (30d)</p>
+                        <h3 class="text-2xl font-bold text-gray-900 tracking-tight mt-1">18,204</h3>
+                    </div>
+                    <div class="mt-3 flex items-center gap-2">
+                        <span class="text-xs text-gray-400">74% engagement rate</span>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-white p-5 rounded-card shadow-card border border-gray-200 hover:shadow-subtle transition-shadow">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-2 bg-purple-50 rounded-lg text-purple-600">
+                            <span class="iconify" data-icon="lucide:arrow-left-right" data-width="20"></span>
+                        </div>
+                        <span class="flex items-center text-xs font-medium text-danger bg-red-50 px-2 py-1 rounded-full border border-red-100">
+                            <span class="iconify mr-1" data-icon="lucide:trending-down" data-width="12"></span>
+                            -2.1%
+                        </span>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Transactions</p>
+                        <h3 class="text-2xl font-bold text-gray-900 tracking-tight mt-1">142.5k</h3>
+                    </div>
+                    <div class="mt-3 flex items-center gap-2">
+                        <span class="text-xs text-gray-400">Processed this month</span>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="bg-white p-5 rounded-card shadow-card border border-gray-200 hover:shadow-subtle transition-shadow">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-2 bg-orange-50 rounded-lg text-orange-600">
+                            <span class="iconify" data-icon="lucide:wallet" data-width="20"></span>
+                        </div>
+                        <span class="flex items-center text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full border border-emerald-100">
+                            <span class="iconify mr-1" data-icon="lucide:trending-up" data-width="12"></span>
+                            +8.5%
+                        </span>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Total Budget Vol</p>
+                        <h3 class="text-2xl font-bold text-gray-900 tracking-tight mt-1">$12.4M</h3>
+                    </div>
+                    <div class="mt-3 flex items-center gap-2">
+                        <span class="text-xs text-gray-400">Across all user portfolios</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Charts Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- User Signups Chart -->
+                <div class="lg:col-span-2 bg-white rounded-card shadow-card border border-gray-200 p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 class="text-base font-semibold text-gray-900">User Growth Trend</h3>
+                            <p class="text-xs text-gray-500">New signups over the last 7 days</p>
+                        </div>
+                        <button class="p-1.5 hover:bg-gray-50 rounded-lg text-gray-400 hover:text-gray-600">
+                            <span class="iconify" data-icon="lucide:more-horizontal" data-width="20"></span>
+                        </button>
+                    </div>
+                    
+                    <!-- CSS/SVG Chart Representation -->
+                    <div class="relative h-64 w-full">
+                        <!-- Grid Lines -->
+                        <div class="absolute inset-0 flex flex-col justify-between text-xs text-gray-400">
+                            <div class="border-b border-gray-100 w-full h-0"></div>
+                            <div class="border-b border-gray-100 w-full h-0"></div>
+                            <div class="border-b border-gray-100 w-full h-0"></div>
+                            <div class="border-b border-gray-100 w-full h-0"></div>
+                            <div class="border-b border-gray-100 w-full h-0 border-solid"></div>
+                        </div>
+                        
+                        <!-- SVG Line -->
+                        <svg class="absolute inset-0 h-full w-full" preserveAspectRatio="none">
+                            <defs>
+                                <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#10B981; stop-opacity:0.2"></stop>
+                                    <stop offset="100%" style="stop-color:#10B981; stop-opacity:0"></stop>
+                                </linearGradient>
+                            </defs>
+                            <path d="M0,200 L140,150 L280,180 L420,100 L560,120 L700,50 L840,80 L980,20 L1120,60 L1400,10" fill="url(#gradient)" stroke="none"></path>
+                            <path class="chart-path" d="M0,200 L140,150 L280,180 L420,100 L560,120 L700,50 L840,80 L980,20 L1120,60 L1400,10" fill="none" stroke="#10B981" stroke-width="3" vector-effect="non-scaling-stroke"></path>
+                        </svg>
+
+                        <!-- Tooltip Simulation -->
+                        <div class="absolute top-[20%] left-[60%] bg-gray-900 text-white text-xs py-1 px-2 rounded shadow-lg transform -translate-x-1/2 -translate-y-full">
+                            142 Users
+                            <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 rotate-45 w-2 h-2 bg-gray-900"></div>
+                        </div>
+                        <div class="absolute top-[20%] left-[60%] w-3 h-3 bg-white border-2 border-emerald-500 rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
+                    </div>
+                    <div class="flex justify-between mt-2 text-xs text-gray-400 px-2">
+                        <span>Mon</span>
+                        <span>Tue</span>
+                        <span>Wed</span>
+                        <span>Thu</span>
+                        <span>Fri</span>
+                        <span>Sat</span>
+                        <span>Sun</span>
+                    </div>
+                </div>
+
+                <!-- Categories Breakdown -->
+                <div class="bg-white rounded-card shadow-card border border-gray-200 p-6">
+                    <h3 class="text-base font-semibold text-gray-900 mb-1">Top Categories</h3>
+                    <p class="text-xs text-gray-500 mb-6">Transaction volume by type</p>
+
+                    <div class="space-y-5">
+                        <!-- Item -->
+                        <div>
+                            <div class="flex justify-between text-sm mb-1.5">
+                                <span class="font-medium text-gray-700">Food &amp; Dining</span>
+                                <span class="font-semibold text-gray-900">35%</span>
+                            </div>
+                            <div class="w-full bg-gray-100 rounded-full h-2">
+                                <div class="bg-emerald-500 h-2 rounded-full bar-fill" style="--width: 35%"></div>
+                            </div>
+                        </div>
+                        <!-- Item -->
+                        <div>
+                            <div class="flex justify-between text-sm mb-1.5">
+                                <span class="font-medium text-gray-700">Shopping</span>
+                                <span class="font-semibold text-gray-900">24%</span>
+                            </div>
+                            <div class="w-full bg-gray-100 rounded-full h-2">
+                                <div class="bg-emerald-400 h-2 rounded-full bar-fill" style="--width: 24%"></div>
+                            </div>
+                        </div>
+                        <!-- Item -->
+                        <div>
+                            <div class="flex justify-between text-sm mb-1.5">
+                                <span class="font-medium text-gray-700">Transportation</span>
+                                <span class="font-semibold text-gray-900">18%</span>
+                            </div>
+                            <div class="w-full bg-gray-100 rounded-full h-2">
+                                <div class="bg-emerald-300 h-2 rounded-full bar-fill" style="--width: 18%"></div>
+                            </div>
+                        </div>
+                        <!-- Item -->
+                        <div>
+                            <div class="flex justify-between text-sm mb-1.5">
+                                <span class="font-medium text-gray-700">Bills &amp; Utilities</span>
+                                <span class="font-semibold text-gray-900">12%</span>
+                            </div>
+                            <div class="w-full bg-gray-100 rounded-full h-2">
+                                <div class="bg-emerald-200 h-2 rounded-full bar-fill" style="--width: 12%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Recent Activity Section -->
+            <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                
+                <!-- Recent Users -->
+                <div class="bg-white rounded-card shadow-card border border-gray-200 overflow-hidden">
+                    <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+                        <h3 class="text-base font-semibold text-gray-900">New Users</h3>
+                        <a href="./16-user-management.html" class="text-xs font-medium text-emerald-600 hover:text-emerald-700">View All</a>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-gray-50 text-gray-500">
+                                <tr>
+                                    <th class="px-6 py-3 font-medium text-xs uppercase tracking-wider">User</th>
+                                    <th class="px-6 py-3 font-medium text-xs uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 font-medium text-xs uppercase tracking-wider text-right">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                <tr class="hover:bg-gray-50 transition-colors group">
+                                    <td class="px-6 py-3.5">
+                                        <div class="flex items-center gap-3">
+                                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=John" alt="" class="w-8 h-8 rounded-full bg-gray-100">
+                                            <div>
+                                                <p class="font-medium text-gray-900">John Cooper</p>
+                                                <p class="text-xs text-gray-500">john.c@example.com</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-3.5">
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">
+                                            Active
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-3.5 text-right text-gray-500 text-xs">
+                                        2 mins ago
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 transition-colors group">
+                                    <td class="px-6 py-3.5">
+                                        <div class="flex items-center gap-3">
+                                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah" alt="" class="w-8 h-8 rounded-full bg-gray-100">
+                                            <div>
+                                                <p class="font-medium text-gray-900">Sarah Jenkins</p>
+                                                <p class="text-xs text-gray-500">sarah.j@example.com</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-3.5">
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600 border border-gray-200">
+                                            Pending
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-3.5 text-right text-gray-500 text-xs">
+                                        15 mins ago
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 transition-colors group">
+                                    <td class="px-6 py-3.5">
+                                        <div class="flex items-center gap-3">
+                                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Mike" alt="" class="w-8 h-8 rounded-full bg-gray-100">
+                                            <div>
+                                                <p class="font-medium text-gray-900">Mike Ross</p>
+                                                <p class="text-xs text-gray-500">mike.ross@example.com</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-3.5">
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">
+                                            Active
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-3.5 text-right text-gray-500 text-xs">
+                                        1 hour ago
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 transition-colors group">
+                                    <td class="px-6 py-3.5">
+                                        <div class="flex items-center gap-3">
+                                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Elaine" alt="" class="w-8 h-8 rounded-full bg-gray-100">
+                                            <div>
+                                                <p class="font-medium text-gray-900">Elaine Benes</p>
+                                                <p class="text-xs text-gray-500">elaine.b@example.com</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-3.5">
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">
+                                            Active
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-3.5 text-right text-gray-500 text-xs">
+                                        3 hours ago
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Recent Support Tickets -->
+                <div class="bg-white rounded-card shadow-card border border-gray-200 overflow-hidden">
+                    <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+                        <h3 class="text-base font-semibold text-gray-900">Recent Support Tickets</h3>
+                        <a href="./19-support-tickets.html" class="text-xs font-medium text-emerald-600 hover:text-emerald-700">View Queue</a>
+                    </div>
+                    <div class="divide-y divide-gray-50">
+                        <div class="p-4 flex items-start gap-4 hover:bg-gray-50 transition-colors cursor-pointer group">
+                            <div class="w-8 h-8 rounded-full bg-red-50 text-red-600 flex items-center justify-center flex-shrink-0 border border-red-100">
+                                <span class="iconify" data-icon="lucide:alert-circle" data-width="16"></span>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex justify-between items-start">
+                                    <h4 class="text-sm font-medium text-gray-900 truncate">Payment Failed - Retry Issue</h4>
+                                    <span class="text-xs text-gray-400 whitespace-nowrap">10m ago</span>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-0.5 truncate">User #8821 reporting inability to process subscription.</p>
+                                <div class="mt-2 flex items-center gap-2">
+                                    <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-red-50 text-red-700 border border-red-100 uppercase tracking-wide">High Priority</span>
+                                    <span class="text-[10px] text-gray-400">#TKT-2901</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 flex items-start gap-4 hover:bg-gray-50 transition-colors cursor-pointer group">
+                            <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0 border border-blue-100">
+                                <span class="iconify" data-icon="lucide:help-circle" data-width="16"></span>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex justify-between items-start">
+                                    <h4 class="text-sm font-medium text-gray-900 truncate">How to export CSV data?</h4>
+                                    <span class="text-xs text-gray-400 whitespace-nowrap">45m ago</span>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-0.5 truncate">General inquiry regarding data portability features.</p>
+                                <div class="mt-2 flex items-center gap-2">
+                                    <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-50 text-blue-700 border border-blue-100 uppercase tracking-wide">Open</span>
+                                    <span class="text-[10px] text-gray-400">#TKT-2899</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 flex items-start gap-4 hover:bg-gray-50 transition-colors cursor-pointer group">
+                            <div class="w-8 h-8 rounded-full bg-gray-50 text-emerald-600 flex items-center justify-center flex-shrink-0 border border-gray-200">
+                                <span class="iconify" data-icon="lucide:check-circle-2" data-width="16"></span>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex justify-between items-start">
+                                    <h4 class="text-sm font-medium text-gray-500 truncate line-through decoration-gray-400">Account deletion request</h4>
+                                    <span class="text-xs text-gray-400 whitespace-nowrap">2h ago</span>
+                                </div>
+                                <p class="text-xs text-gray-400 mt-0.5 truncate">Ticket resolved by Admin.</p>
+                                <div class="mt-2 flex items-center gap-2">
+                                    <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-gray-100 text-gray-600 border border-gray-200 uppercase tracking-wide">Closed</span>
+                                    <span class="text-[10px] text-gray-400">#TKT-2895</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+
+        function toggleSidebar() {
+            const isClosed = sidebar.classList.contains('-translate-x-full');
+            if (isClosed) {
+                sidebar.classList.remove('-translate-x-full');
+                mobileOverlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                mobileOverlay.classList.add('hidden');
+            }
+        }
+
+        // Close sidebar on Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape") {
+                if(!sidebar.classList.contains('-translate-x-full')) toggleSidebar();
+            }
+        });
+    </script>
+
+</body></html>

@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Support Tickets - PennyWise Admin</title>
+<!-- Fonts: Inter -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Iconify (Lucide Icons) -->
+<script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+<script>
+tailwind.config = {
+theme: {
+extend: {
+fontFamily: {
+sans: ['Inter', 'sans-serif'],
+},
+colors: {
+emerald: {
+50: '#ECFDF5',
+100: '#D1FAE5',
+200: '#A7F3D0',
+300: '#6EE7B7',
+400: '#34D399',
+500: '#10B981', // Primary
+600: '#059669', // Secondary
+700: '#047857',
+800: '#065F46',
+900: '#064E3B',
+},
+amber: {
+50: '#FFFBEB',
+500: '#F59E0B',
+600: '#D97706',
+700: '#B45309',
+},
+red: {
+50: '#FEF2F2',
+500: '#EF4444',
+600: '#DC2626',
+700: '#B91C1C',
+},
+gray: {
+50: '#F9FAFB', // Background
+100: '#F3F4F6',
+200: '#E5E7EB',
+300: '#D1D5DB',
+400: '#9CA3AF',
+500: '#6B7280',
+600: '#4B5563',
+700: '#374151',
+800: '#1F2937',
+900: '#111827', // Text
+},
+},
+borderRadius: {
+'card': '12px',
+'btn': '8px',
+},
+boxShadow: {
+'card': '0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05)',
+'hover': '0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025)',
+}
+}
+}
+}
+</script>
+<style>
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.form-select {
+background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+background-position: right 0.5rem center;
+background-repeat: no-repeat;
+background-size: 1.5em 1.5em;
+padding-right: 2.5rem;
+-webkit-appearance: none;
+appearance: none;
+}
+.custom-checkbox {
+appearance: none;
+background-color: #fff;
+margin: 0;
+font: inherit;
+width: 1rem;
+height: 1rem;
+border: 1px solid #D1D5DB;
+border-radius: 0.25rem;
+display: grid;
+place-content: center;
+transition: all 0.2s ease-in-out;
+cursor: pointer;
+}
+.custom-checkbox::before {
+content: "";
+width: 0.65em;
+height: 0.65em;
+transform: scale(0);
+transition: 120ms transform ease-in-out;
+box-shadow: inset 1em 1em white;
+transform-origin: center;
+clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+.custom-checkbox:checked {
+background-color: #10B981;
+border-color: #10B981;
+}
+.custom-checkbox:checked::before {
+transform: scale(1);
+}
+/* Status Badge Colors */
+.badge-open { background-color: #EFF6FF; color: #1D4ED8; border: 1px solid #DBEAFE; }
+.badge-progress { background-color: #FFFBEB; color: #B45309; border: 1px solid #FEF3C7; }
+.badge-resolved { background-color: #ECFDF5; color: #047857; border: 1px solid #D1FAE5; }
+.badge-closed { background-color: #F3F4F6; color: #374151; border: 1px solid #E5E7EB; }
+/* Priority Badge Colors */
+.priority-high { color: #EF4444; background-color: #FEF2F2; border: 1px solid #FEE2E2; }
+.priority-medium { color: #D97706; background-color: #FFFBEB; border: 1px solid #FEF3C7; }
+.priority-low { color: #4B5563; background-color: #F3F4F6; border: 1px solid #E5E7EB; }
+</style></head>
+<body class="bg-gray-50 min-h-screen w-full font-sans antialiased text-gray-900 flex overflow-hidden">
+
+    <!-- Mobile Overlay -->
+    <div id="mobileOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-gray-900/50 z-40 hidden lg:hidden backdrop-blur-sm transition-opacity"></div>
+
+    <!-- Admin Sidebar -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-[260px] bg-white border-r border-gray-200 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col h-full shadow-card lg:shadow-none">
+        <!-- Header -->
+        <div class="h-16 flex items-center px-6 border-b border-gray-100">
+            <div class="flex items-center gap-2 text-emerald-600">
+                <span class="iconify" data-icon="lucide:leaf" data-width="24" style="stroke-width: 1.5;"></span>
+                <span class="text-lg font-bold tracking-tight text-gray-900">PennyWise</span>
+                <span class="px-2 py-0.5 rounded-full bg-gray-100 text-gray-500 text-[10px] font-bold uppercase tracking-wider border border-gray-200 ml-1">Admin</span>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 overflow-y-auto py-6 px-3 space-y-1">
+            <a href="./15-admin-dashboard.html" class="flex items-center gap-3 px-3 py-2.5 rounded-btn text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-medium group transition-colors">
+                <span class="iconify text-gray-400 group-hover:text-gray-600" data-icon="lucide:layout-dashboard" data-width="20" style="stroke-width: 1.5;"></span>
+                Dashboard
+            </a>
+
+            <div class="px-3 pt-4 pb-2">
+                <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Platform</p>
+            </div>
+
+            <a href="./16-user-management.html" class="flex items-center gap-3 px-3 py-2.5 rounded-btn text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-medium group transition-colors">
+                <span class="iconify text-gray-400 group-hover:text-gray-600" data-icon="lucide:users" data-width="20" style="stroke-width: 1.5;"></span>
+                User Management
+            </a>
+            <a href="./17-category-management.html" class="flex items-center gap-3 px-3 py-2.5 rounded-btn text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-medium group transition-colors">
+                <span class="iconify text-gray-400 group-hover:text-gray-600" data-icon="lucide:tags" data-width="20" style="stroke-width: 1.5;"></span>
+                Categories
+            </a>
+            <a href="./18-platform-analytics.html" class="flex items-center gap-3 px-3 py-2.5 rounded-btn text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-medium group transition-colors">
+                <span class="iconify text-gray-400 group-hover:text-gray-600" data-icon="lucide:bar-chart-3" data-width="20" style="stroke-width: 1.5;"></span>
+                Platform Analytics
+            </a>
+
+            <div class="px-3 pt-4 pb-2">
+                <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">System</p>
+            </div>
+
+            <a href="./19-support-tickets.html" class="flex items-center gap-3 px-3 py-2.5 rounded-btn bg-emerald-50 text-emerald-700 font-medium group transition-colors">
+                <div class="relative">
+                    <span class="iconify" data-icon="lucide:ticket" data-width="20" style="stroke-width: 1.5;"></span>
+                    <span class="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-danger opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-danger"></span>
+                    </span>
+                </div>
+                Support Tickets
+            </a>
+            <a href="./20-admin-settings.html" class="flex items-center gap-3 px-3 py-2.5 rounded-btn text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-medium group transition-colors">
+                <span class="iconify text-gray-400 group-hover:text-gray-600" data-icon="lucide:settings-2" data-width="20" style="stroke-width: 1.5;"></span>
+                Admin Settings
+            </a>
+        </nav>
+
+        <!-- Admin Profile -->
+        <div class="p-4 border-t border-gray-100">
+            <div class="flex items-center gap-3 p-2 rounded-btn hover:bg-gray-50 cursor-pointer transition-colors border border-transparent hover:border-gray-200">
+                <div class="relative">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Admin" alt="Admin" class="w-9 h-9 rounded-full bg-gray-100 border border-gray-200">
+                    <div class="absolute -bottom-0.5 -right-0.5 bg-emerald-500 rounded-full p-0.5 border-2 border-white">
+                        <span class="iconify text-white" data-icon="lucide:shield-check" data-width="10"></span>
+                    </div>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-semibold text-gray-900 truncate">System Admin</p>
+                    <p class="text-xs text-gray-500 truncate">admin@pennywise.app</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 h-screen overflow-y-auto lg:pl-[260px] relative w-full scroll-smooth bg-gray-50">
+        <div class="max-w-[1600px] mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+            
+            <!-- Page Header -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    <button onclick="toggleSidebar()" class="lg:hidden p-2 -ml-2 rounded-btn text-gray-600 hover:bg-gray-100">
+                        <span class="iconify" data-icon="lucide:menu" data-width="24"></span>
+                    </button>
+                    <div>
+                        <h1 class="text-2xl font-bold tracking-tight text-gray-900">Support Tickets</h1>
+                        <p class="text-sm text-gray-500 mt-0.5">Manage and track user support requests and issues.</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                    <button class="flex items-center justify-center gap-2 px-4 py-2 bg-white text-gray-700 border border-gray-200 rounded-btn hover:bg-gray-50 hover:border-gray-300 font-medium text-sm transition-all shadow-sm whitespace-nowrap">
+                        <span class="iconify" data-icon="lucide:settings" data-width="18"></span>
+                        Settings
+                    </button>
+                    <button class="flex items-center justify-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-btn hover:bg-emerald-700 font-medium text-sm transition-all shadow-sm shadow-emerald-200 whitespace-nowrap">
+                        <span class="iconify" data-icon="lucide:plus" data-width="18"></span>
+                        Create Ticket
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Stat 1 -->
+                <div class="bg-white p-5 rounded-card border border-gray-200 shadow-sm hover:shadow-card transition-all">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-2 bg-blue-50 text-blue-600 rounded-lg border border-blue-100">
+                            <span class="iconify" data-icon="lucide:inbox" data-width="20"></span>
+                        </div>
+                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-600 border border-red-100">
+                            +4
+                        </span>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900 tracking-tight">23</h3>
+                        <p class="text-sm font-medium text-gray-500 mt-1">Open Tickets</p>
+                    </div>
+                </div>
+
+                <!-- Stat 2 -->
+                <div class="bg-white p-5 rounded-card border border-gray-200 shadow-sm hover:shadow-card transition-all">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-2 bg-amber-50 text-amber-600 rounded-lg border border-amber-100">
+                            <span class="iconify" data-icon="lucide:clock" data-width="20"></span>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900 tracking-tight">12</h3>
+                        <p class="text-sm font-medium text-gray-500 mt-1">In Progress</p>
+                    </div>
+                </div>
+
+                <!-- Stat 3 -->
+                <div class="bg-white p-5 rounded-card border border-gray-200 shadow-sm hover:shadow-card transition-all">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-2 bg-emerald-50 text-emerald-600 rounded-lg border border-emerald-100">
+                            <span class="iconify" data-icon="lucide:check-circle-2" data-width="20"></span>
+                        </div>
+                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-600 border border-emerald-100">
+                            Today
+                        </span>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900 tracking-tight">8</h3>
+                        <p class="text-sm font-medium text-gray-500 mt-1">Resolved</p>
+                    </div>
+                </div>
+
+                <!-- Stat 4 -->
+                <div class="bg-white p-5 rounded-card border border-gray-200 shadow-sm hover:shadow-card transition-all">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-2 bg-purple-50 text-purple-600 rounded-lg border border-purple-100">
+                            <span class="iconify" data-icon="lucide:zap" data-width="20"></span>
+                        </div>
+                         <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-600 border border-emerald-100">
+                            -12%
+                        </span>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900 tracking-tight">2.4h</h3>
+                        <p class="text-sm font-medium text-gray-500 mt-1">Avg Response Time</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="bg-white border border-gray-200 rounded-card shadow-sm flex flex-col">
+                
+                <!-- Toolbar / Filters -->
+                <div class="p-4 border-b border-gray-200 flex flex-col xl:flex-row gap-4 justify-between bg-white rounded-t-card">
+                    
+                    <!-- Search -->
+                    <div class="relative w-full xl:w-96">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <span class="iconify text-gray-400" data-icon="lucide:search" data-width="18"></span>
+                        </div>
+                        <input type="text" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-btn leading-5 bg-white placeholder-gray-400 focus:outline-none focus:placeholder-gray-300 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 sm:text-sm transition-colors" placeholder="Search by ticket ID, user email, subject...">
+                    </div>
+
+                    <!-- Filters Group -->
+                    <div class="flex flex-col sm:flex-row gap-3 w-full xl:w-auto overflow-x-auto pb-2 sm:pb-0">
+                        <!-- Status Filter -->
+                        <div class="min-w-[140px]">
+                            <select class="form-select block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm rounded-btn bg-white text-gray-700">
+                                <option>All Status</option>
+                                <option>Open</option>
+                                <option>In Progress</option>
+                                <option>Resolved</option>
+                                <option>Closed</option>
+                            </select>
+                        </div>
+
+                        <!-- Priority Filter -->
+                        <div class="min-w-[140px]">
+                            <select class="form-select block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm rounded-btn bg-white text-gray-700">
+                                <option>All Priority</option>
+                                <option>High</option>
+                                <option>Medium</option>
+                                <option>Low</option>
+                            </select>
+                        </div>
+
+                        <!-- Date Range -->
+                        <div class="relative min-w-[200px]">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <span class="iconify text-gray-400" data-icon="lucide:calendar" data-width="16"></span>
+                            </div>
+                            <input type="text" value="Jan 10 - Jan 20, 2024" class="block w-full pl-9 pr-3 py-2 border border-gray-300 rounded-btn leading-5 bg-white text-gray-700 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 sm:text-sm cursor-pointer hover:border-gray-400 transition-colors" readonly="">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Conditional Bulk Actions Bar (Simulated State) -->
+                <!-- Use 'hidden' to toggle visibility based on selection -->
+                <div class="hidden bg-emerald-50 px-4 py-2 border-b border-emerald-100 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm font-semibold text-emerald-800">2 tickets selected</span>
+                        <div class="h-4 w-px bg-emerald-200"></div>
+                        <button class="text-xs font-medium text-emerald-700 hover:text-emerald-900 hover:underline">Unselect all</button>
+                    </div>
+                    <div class="flex items-center gap-2">
+                         <select class="text-xs border-emerald-200 rounded px-2 py-1 bg-white text-gray-700 focus:ring-emerald-500">
+                            <option>Mark as Resolved</option>
+                            <option>Change Priority</option>
+                            <option>Delete</option>
+                        </select>
+                        <button class="px-3 py-1 bg-emerald-600 text-white text-xs font-medium rounded hover:bg-emerald-700">Apply</button>
+                    </div>
+                </div>
+
+                <!-- Tickets Table -->
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left w-12">
+                                    <input type="checkbox" class="custom-checkbox">
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                    Ticket ID
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                    User
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                    Subject
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                    Status
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                    Priority
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                    Last Updated
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <!-- Row 1 -->
+                            <tr class="hover:bg-gray-50 transition-colors group cursor-pointer">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <input type="checkbox" class="custom-checkbox">
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="text-sm font-medium text-gray-900">#TKT-2891</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-xs border border-blue-200">
+                                            JC
+                                        </div>
+                                        <div class="ml-3">
+                                            <div class="text-sm font-medium text-gray-900">John Cooper</div>
+                                            <div class="text-xs text-gray-500">john.c@example.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900 max-w-[200px] truncate">Can't link my bank account</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="badge-open inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
+                                        Open
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="priority-high inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium">
+                                        <span class="iconify" data-icon="lucide:alert-circle" data-width="12"></span>
+                                        High
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    2h ago
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <button class="text-gray-400 hover:text-emerald-600 transition-colors p-1">
+                                        <span class="iconify" data-icon="lucide:more-vertical" data-width="18"></span>
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <!-- Row 2 -->
+                            <tr class="hover:bg-gray-50 transition-colors group cursor-pointer">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <input type="checkbox" class="custom-checkbox">
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="text-sm font-medium text-gray-900">#TKT-2890</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <img class="h-8 w-8 rounded-full border border-gray-200" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah" alt="">
+                                        <div class="ml-3">
+                                            <div class="text-sm font-medium text-gray-900">Sarah Jenkins</div>
+                                            <div class="text-xs text-gray-500">s.jenkins@test.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900 max-w-[200px] truncate">Question about budget categories</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="badge-progress inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
+                                        In Progress
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="priority-medium inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium">
+                                        Medium
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    1h ago
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <button class="text-gray-400 hover:text-emerald-600 transition-colors p-1">
+                                        <span class="iconify" data-icon="lucide:more-vertical" data-width="18"></span>
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <!-- Row 3 -->
+                            <tr class="hover:bg-gray-50 transition-colors group cursor-pointer">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <input type="checkbox" class="custom-checkbox">
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="text-sm font-medium text-gray-900">#TKT-2889</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="h-8 w-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold text-xs border border-purple-200">
+                                            MC
+                                        </div>
+                                        <div class="ml-3">
+                                            <div class="text-sm font-medium text-gray-900">Michael Chen</div>
+                                            <div class="text-xs text-gray-500">m.chen@dev.io</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900 max-w-[200px] truncate">App crashes on transaction entry</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="badge-open inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
+                                        Open
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="priority-high inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium">
+                                        <span class="iconify" data-icon="lucide:alert-circle" data-width="12"></span>
+                                        High
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    5h ago
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <button class="text-gray-400 hover:text-emerald-600 transition-colors p-1">
+                                        <span class="iconify" data-icon="lucide:more-vertical" data-width="18"></span>
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <!-- Row 4 -->
+                            <tr class="hover:bg-gray-50 transition-colors group cursor-pointer">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <input type="checkbox" class="custom-checkbox">
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="text-sm font-medium text-gray-900">#TKT-2888</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <img class="h-8 w-8 rounded-full border border-gray-200" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Emily" alt="">
+                                        <div class="ml-3">
+                                            <div class="text-sm font-medium text-gray-900">Emily Watson</div>
+                                            <div class="text-xs text-gray-500">emily.w@mail.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900 max-w-[200px] truncate">How to export my data?</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="badge-resolved inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
+                                        Resolved
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="priority-low inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium">
+                                        Low
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    1d ago
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <button class="text-gray-400 hover:text-emerald-600 transition-colors p-1">
+                                        <span class="iconify" data-icon="lucide:more-vertical" data-width="18"></span>
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <!-- Row 5 -->
+                            <tr class="hover:bg-gray-50 transition-colors group cursor-pointer">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <input type="checkbox" class="custom-checkbox">
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="text-sm font-medium text-gray-900">#TKT-2887</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="h-8 w-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold text-xs border border-emerald-200">
+                                            RK
+                                        </div>
+                                        <div class="ml-3">
+                                            <div class="text-sm font-medium text-gray-900">Robert Kim</div>
+                                            <div class="text-xs text-gray-500">rob.kim@startup.net</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900 max-w-[200px] truncate">Subscription billing issue</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="badge-progress inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
+                                        In Progress
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="priority-high inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium">
+                                        <span class="iconify" data-icon="lucide:alert-circle" data-width="12"></span>
+                                        High
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    1d ago
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <button class="text-gray-400 hover:text-emerald-600 transition-colors p-1">
+                                        <span class="iconify" data-icon="lucide:more-vertical" data-width="18"></span>
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <!-- Row 6 -->
+                            <tr class="hover:bg-gray-50 transition-colors group cursor-pointer">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <input type="checkbox" class="custom-checkbox">
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="text-sm font-medium text-gray-900">#TKT-2886</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <img class="h-8 w-8 rounded-full border border-gray-200" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Lisa" alt="">
+                                        <div class="ml-3">
+                                            <div class="text-sm font-medium text-gray-900">Lisa Park</div>
+                                            <div class="text-xs text-gray-500">lisa.park@design.co</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900 max-w-[200px] truncate">Feature request: recurring budgets</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="badge-closed inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
+                                        Closed
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="priority-low inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium">
+                                        Low
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    3d ago
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <button class="text-gray-400 hover:text-emerald-600 transition-colors p-1">
+                                        <span class="iconify" data-icon="lucide:more-vertical" data-width="18"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="bg-white px-4 py-3 border-t border-gray-200 flex items-center justify-between sm:px-6 rounded-b-card">
+                    <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                        <div class="flex items-center gap-4">
+                            <p class="text-sm text-gray-700">
+                                Showing
+                                <span class="font-medium">1</span>
+                                to
+                                <span class="font-medium">6</span>
+                                of
+                                <span class="font-medium">156</span>
+                                tickets
+                            </p>
+                            <select class="form-select text-xs border-gray-300 rounded focus:ring-emerald-500 focus:border-emerald-500 py-1 pl-2 pr-7">
+                                <option>10 per page</option>
+                                <option>20 per page</option>
+                                <option>50 per page</option>
+                            </select>
+                        </div>
+                        <div>
+                            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                                <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                    <span class="sr-only">Previous</span>
+                                    <span class="iconify" data-icon="lucide:chevron-left" data-width="16"></span>
+                                </a>
+                                <a href="#" aria-current="page" class="z-10 bg-emerald-50 border-emerald-500 text-emerald-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                    1
+                                </a>
+                                <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                    2
+                                </a>
+                                <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 hidden md:inline-flex relative items-center px-4 py-2 border text-sm font-medium">
+                                    3
+                                </a>
+                                <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+                                    ...
+                                </span>
+                                <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 hidden md:inline-flex relative items-center px-4 py-2 border text-sm font-medium">
+                                    8
+                                </a>
+                                <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                    <span class="sr-only">Next</span>
+                                    <span class="iconify" data-icon="lucide:chevron-right" data-width="16"></span>
+                                </a>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="h-6"></div> <!-- Bottom Spacer -->
+
+        </div>
+    </main>
+
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+
+        function toggleSidebar() {
+            const isClosed = sidebar.classList.contains('-translate-x-full');
+            if (isClosed) {
+                sidebar.classList.remove('-translate-x-full');
+                mobileOverlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                mobileOverlay.classList.add('hidden');
+            }
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape") {
+                if(!sidebar.classList.contains('-translate-x-full')) toggleSidebar();
+            }
+        });
+    </script>
+
+</body></html>

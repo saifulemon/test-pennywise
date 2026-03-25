@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - PennyWise</title>
+<!-- Fonts: Inter & JetBrains Mono -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Iconify (Lucide Icons) -->
+<script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+<script>
+tailwind.config = {
+theme: {
+extend: {
+fontFamily: {
+sans: ['Inter', 'sans-serif'],
+mono: ['JetBrains Mono', 'monospace'],
+},
+colors: {
+emerald: {
+50: '#ECFDF5',
+100: '#D1FAE5',
+500: '#10B981', // Primary
+600: '#059669',
+900: '#064E3B',
+},
+gray: {
+50: '#F9FAFB',
+100: '#F3F4F6',
+200: '#E5E7EB',
+300: '#D1D5DB',
+400: '#9CA3AF',
+500: '#6B7280',
+600: '#4B5563',
+700: '#374151',
+800: '#1F2937',
+900: '#111827',
+}
+},
+animation: {
+'spin-fast': 'spin 0.6s linear infinite',
+}
+}
+}
+}
+</script>
+<style>
+/* Custom styles for specific requirements */
+.input-group input:focus {
+outline: none;
+box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2); /* 2px emerald ring transparent */
+border-color: #10B981;
+}
+.input-group input.error {
+border-color: #EF4444;
+box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.1);
+}
+/* Abstract Pattern for Left Side */
+.pattern-grid {
+background-image: radial-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 1px);
+background-size: 24px 24px;
+}
+.glass-card {
+background: rgba(255, 255, 255, 0.1);
+backdrop-filter: blur(10px);
+border: 1px solid rgba(255, 255, 255, 0.2);
+}
+</style></head>
+<body class="bg-gray-50 h-screen w-full font-sans antialiased text-gray-900 overflow-hidden">
+
+    <div class="flex h-full w-full">
+        <!-- LEFT SIDE: Brand / Illustration (Desktop Only) -->
+        <div class="hidden lg:flex w-1/2 bg-emerald-600 relative flex-col justify-between overflow-hidden">
+            <!-- Background Decoration -->
+            <div class="absolute inset-0 pattern-grid opacity-30"></div>
+            <div class="absolute top-[-20%] left-[-20%] w-[800px] h-[800px] bg-emerald-500 rounded-full blur-[120px] opacity-40"></div>
+            <div class="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-emerald-900 rounded-full blur-[100px] opacity-30"></div>
+
+            <!-- Brand Content -->
+            <div class="relative z-10 p-12 h-full flex flex-col justify-between">
+                <!-- Logo Top Left -->
+                <div class="flex items-center gap-2">
+                    <div class="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
+                        <span class="iconify text-white" data-icon="lucide:wallet" data-width="24" data-height="24"></span>
+                    </div>
+                    <span class="text-white font-bold text-xl tracking-tight">PennyWise</span>
+                </div>
+
+                <!-- Abstract Chart / Visual -->
+                <div class="flex-1 flex items-center justify-center">
+                    <div class="glass-card w-full max-w-md p-6 rounded-2xl shadow-2xl transform rotate-3 hover:rotate-0 transition-transform duration-500">
+                        <div class="flex justify-between items-center mb-6">
+                            <div>
+                                <div class="text-emerald-100 text-xs font-medium uppercase tracking-wider">Total Balance</div>
+                                <div class="text-white text-3xl font-semibold mt-1">$124,500.00</div>
+                            </div>
+                            <div class="bg-emerald-500/30 p-2 rounded-full">
+                                <span class="iconify text-white" data-icon="lucide:trending-up" data-width="24"></span>
+                            </div>
+                        </div>
+                        <!-- Fake Bars -->
+                        <div class="flex items-end gap-3 h-32">
+                            <div class="w-full bg-white/20 rounded-t-sm h-[40%]"></div>
+                            <div class="w-full bg-white/20 rounded-t-sm h-[60%]"></div>
+                            <div class="w-full bg-white/20 rounded-t-sm h-[30%]"></div>
+                            <div class="w-full bg-white/20 rounded-t-sm h-[75%]"></div>
+                            <div class="w-full bg-white/40 rounded-t-sm h-[50%]"></div>
+                            <div class="w-full bg-white/90 rounded-t-sm h-[85%]"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tagline -->
+                <div class="max-w-md">
+                    <h2 class="text-3xl font-bold text-white tracking-tight mb-2">Master your money.</h2>
+                    <p class="text-emerald-100 text-sm font-medium leading-relaxed opacity-90">
+                        Track expenses, set budgets, and achieve your financial goals with intelligent insights and real-time monitoring.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT SIDE: Login Form -->
+        <div class="w-full lg:w-1/2 flex items-center justify-center bg-white p-4 sm:p-8 relative">
+            <!-- Mobile Logo (Visible only on small screens) -->
+            <div class="absolute top-6 left-6 lg:hidden flex items-center gap-2">
+                <div class="text-emerald-500">
+                    <span class="iconify" data-icon="lucide:wallet" data-width="24"></span>
+                </div>
+                <span class="text-gray-900 font-bold text-lg tracking-tight">PennyWise</span>
+            </div>
+
+            <div class="w-full max-w-[400px]">
+                <!-- Header -->
+                <div class="mb-8">
+                    <h1 class="text-2xl font-semibold tracking-tight text-gray-900">Welcome back</h1>
+                    <p class="text-sm text-gray-500 mt-2">Please enter your details to sign in.</p>
+                </div>
+
+                <!-- Form -->
+                <form id="loginForm" class="space-y-5" novalidate="">
+                    
+                    <!-- Email Field -->
+                    <div class="input-group space-y-1.5">
+                        <label for="email" class="text-sm font-medium text-gray-700">Email address</label>
+                        <div class="relative group">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-emerald-500 transition-colors">
+                                <span class="iconify" data-icon="lucide:mail" data-width="18" style="stroke-width: 1.5;"></span>
+                            </span>
+                            <input type="email" id="email" class="w-full pl-10 pr-4 h-11 rounded-lg border border-gray-200 bg-white text-sm text-gray-900 placeholder:text-gray-400 transition-all" placeholder="name@company.com" required="">
+                        </div>
+                        <p id="emailError" class="hidden text-xs text-red-500 font-medium flex items-center gap-1 mt-1">
+                            <span class="iconify" data-icon="lucide:alert-circle" data-width="12"></span>
+                            <span>Please enter a valid email address</span>
+                        </p>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="input-group space-y-1.5">
+                        <div class="flex justify-between items-center">
+                            <label for="password" class="text-sm font-medium text-gray-700">Password</label>
+                            <a href="./04-forgot-password.html" class="text-xs font-medium text-emerald-600 hover:text-emerald-700 hover:underline">Forgot Password?</a>
+                        </div>
+                        <div class="relative group">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-emerald-500 transition-colors">
+                                <span class="iconify" data-icon="lucide:lock" data-width="18" style="stroke-width: 1.5;"></span>
+                            </span>
+                            <input type="password" id="password" class="w-full pl-10 pr-4 h-11 rounded-lg border border-gray-200 bg-white text-sm text-gray-900 placeholder:text-gray-400 transition-all" placeholder="••••••••" required="">
+                        </div>
+                        <p id="passwordError" class="hidden text-xs text-red-500 font-medium flex items-center gap-1 mt-1">
+                            <span class="iconify" data-icon="lucide:alert-circle" data-width="12"></span>
+                            <span>Password must be at least 8 characters</span>
+                        </p>
+                    </div>
+
+                    <!-- Login Button -->
+                    <button type="submit" id="submitBtn" class="w-full h-11 bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-white text-sm font-medium rounded-lg shadow-sm shadow-emerald-500/20 transition-all duration-200 flex items-center justify-center gap-2 relative overflow-hidden">
+                        <span id="btnText">Sign in</span>
+                        <span id="btnSpinner" class="hidden">
+                            <span class="iconify animate-spin" data-icon="lucide:loader-2" data-width="18"></span>
+                        </span>
+                    </button>
+                </form>
+
+                <!-- Divider -->
+                <div class="relative my-6">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-200"></div>
+                    </div>
+                    <div class="relative flex justify-center text-xs">
+                        <span class="px-2 bg-white text-gray-500">or</span>
+                    </div>
+                </div>
+
+                <!-- Google Auth -->
+                <button type="button" class="w-full h-11 bg-white hover:bg-gray-50 text-gray-700 text-sm font-medium rounded-lg border border-gray-200 shadow-sm transition-all duration-200 flex items-center justify-center gap-3">
+                    <span class="iconify" data-icon="flat-color-icons:google" data-width="20"></span>
+                    Sign in with Google
+                </button>
+
+                <!-- Footer -->
+                <p class="mt-8 text-center text-xs text-gray-500">
+                    Don't have an account?
+                    <a href="./03-signup.html" class="font-semibold text-emerald-600 hover:text-emerald-500 transition-colors">Sign up</a>
+                </p>
+            </div>
+            
+            <!-- Copyright Footer Mobile -->
+            <div class="absolute bottom-4 text-[10px] text-gray-400 lg:hidden">
+                © 2024 PennyWise Inc.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('loginForm');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const emailError = document.getElementById('emailError');
+            const passwordError = document.getElementById('passwordError');
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const btnSpinner = document.getElementById('btnSpinner');
+
+            // Validation Regex
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            // Helper to show/hide errors
+            const showError = (input, element, show) => {
+                if (show) {
+                    element.classList.remove('hidden');
+                    input.classList.add('error');
+                } else {
+                    element.classList.add('hidden');
+                    input.classList.remove('error');
+                }
+            };
+
+            // Blur Event Listeners
+            emailInput.addEventListener('blur', () => {
+                if (emailInput.value && !emailRegex.test(emailInput.value)) {
+                    showError(emailInput, emailError, true);
+                } else {
+                    showError(emailInput, emailError, false);
+                }
+            });
+
+            passwordInput.addEventListener('blur', () => {
+                if (passwordInput.value && passwordInput.value.length < 8) {
+                    showError(passwordInput, passwordError, true);
+                } else {
+                    showError(passwordInput, passwordError, false);
+                }
+            });
+
+            // Input Event Listeners (Clear error on type)
+            emailInput.addEventListener('input', () => showError(emailInput, emailError, false));
+            passwordInput.addEventListener('input', () => showError(passwordInput, passwordError, false));
+
+            // Form Submit
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                let isValid = true;
+
+                // Validate Email
+                if (!emailRegex.test(emailInput.value)) {
+                    showError(emailInput, emailError, true);
+                    isValid = false;
+                }
+
+                // Validate Password
+                if (passwordInput.value.length < 8) {
+                    showError(passwordInput, passwordError, true);
+                    isValid = false;
+                }
+
+                if (isValid) {
+                    // Loading State
+                    submitBtn.disabled = true;
+                    emailInput.disabled = true;
+                    passwordInput.disabled = true;
+                    btnText.classList.add('hidden');
+                    btnSpinner.classList.remove('hidden');
+                    submitBtn.classList.add('opacity-80', 'cursor-not-allowed');
+
+                    // Simulate API Call
+                    setTimeout(() => {
+                        // Reset for demo purposes
+                        submitBtn.disabled = false;
+                        emailInput.disabled = false;
+                        passwordInput.disabled = false;
+                        btnText.classList.remove('hidden');
+                        btnSpinner.classList.add('hidden');
+                        submitBtn.classList.remove('opacity-80', 'cursor-not-allowed');
+                        
+                        // Redirect to dashboard
+                        location.href = './06-dashboard.html';
+                    }, 1500);
+                }
+            });
+        });
+    </script>
+
+</body></html>

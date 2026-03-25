@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Savings Goals - PennyWise</title>
+<!-- Fonts: Inter -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Iconify (Lucide Icons) -->
+<script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+<script>
+tailwind.config = {
+theme: {
+extend: {
+fontFamily: {
+sans: ['Inter', 'sans-serif'],
+},
+colors: {
+emerald: {
+50: '#ECFDF5',
+100: '#D1FAE5',
+500: '#10B981', // Primary
+600: '#059669', // Secondary
+900: '#064E3B',
+},
+gray: {
+50: '#F9FAFB', // Background
+100: '#F3F4F6',
+200: '#E5E7EB',
+300: '#D1D5DB',
+400: '#9CA3AF',
+500: '#6B7280',
+600: '#4B5563',
+700: '#374151',
+800: '#1F2937',
+900: '#111827', // Text
+},
+danger: '#EF4444',
+warning: '#F59E0B',
+},
+borderRadius: {
+'card': '12px',
+'btn': '8px',
+},
+boxShadow: {
+'card': '0 1px 3px 0 rgba(0, 0, 0, 0.08), 0 1px 2px -1px rgba(0, 0, 0, 0.08)',
+'drawer': '-4px 0 24px rgba(0,0,0,0.08)',
+'fab': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+}
+}
+}
+}
+</script>
+<style>
+.no-scrollbar::-webkit-scrollbar {
+display: none;
+}
+.no-scrollbar {
+-ms-overflow-style: none;
+scrollbar-width: none;
+}
+/* Custom form inputs */
+.form-input {
+width: 100%;
+padding: 0.625rem 0.875rem;
+border: 1px solid #E5E7EB;
+border-radius: 8px;
+font-size: 0.875rem;
+color: #111827;
+background-color: #FFFFFF;
+transition: border-color 0.15s, box-shadow 0.15s;
+}
+.form-input:focus {
+outline: none;
+border-color: #10B981;
+box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+</style></head>
+<body class="bg-gray-50 min-h-screen w-full font-sans antialiased text-gray-900 flex overflow-hidden">
+
+    <!-- Mobile Overlay for Sidebar -->
+    <div id="mobileOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-gray-900/50 z-40 hidden lg:hidden backdrop-blur-sm transition-opacity"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-[240px] bg-white border-r border-gray-200 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col h-full">
+        <div class="h-16 flex items-center px-6 border-b border-gray-100">
+            <div class="flex items-center gap-2 text-emerald-600">
+                <span class="iconify" data-icon="lucide:leaf" data-width="24" style="stroke-width: 1.5;"></span>
+                <span class="text-lg font-bold tracking-tight text-gray-900">PennyWise</span>
+            </div>
+        </div>
+        <nav class="flex-1 overflow-y-auto py-6 px-3 space-y-1">
+            <a href="./06-dashboard.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-btn text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-medium group transition-colors">
+                <span class="iconify text-gray-400 group-hover:text-gray-600" data-icon="lucide:layout-dashboard" data-width="20" style="stroke-width: 1.5;"></span>
+                Dashboard
+            </a>
+            <a href="./07-budgets-list.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-btn text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-medium group transition-colors">
+                <span class="iconify text-gray-400 group-hover:text-gray-600" data-icon="lucide:wallet" data-width="20" style="stroke-width: 1.5;"></span>
+                Budgets
+            </a>
+            <a href="./09-transactions-list.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-btn text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-medium group transition-colors">
+                <span class="iconify text-gray-400 group-hover:text-gray-600" data-icon="lucide:arrow-left-right" data-width="20" style="stroke-width: 1.5;"></span>
+                Transactions
+            </a>
+            <!-- Active State for Goals -->
+            <a href="./11-goals-list.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-btn bg-emerald-50 text-emerald-600 font-medium group transition-colors">
+                <span class="iconify" data-icon="lucide:target" data-width="20" style="stroke-width: 1.5;"></span>
+                Goals
+            </a>
+            <a href="./13-analytics.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-btn text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-medium group transition-colors">
+                <span class="iconify text-gray-400 group-hover:text-gray-600" data-icon="lucide:bar-chart-3" data-width="20" style="stroke-width: 1.5;"></span>
+                Analytics
+            </a>
+            <a href="./14-settings.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-btn text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-medium group transition-colors">
+                <span class="iconify text-gray-400 group-hover:text-gray-600" data-icon="lucide:settings" data-width="20" style="stroke-width: 1.5;"></span>
+                Settings
+            </a>
+        </nav>
+        <div class="p-4 border-t border-gray-100">
+            <div class="flex items-center gap-3 p-2 rounded-btn hover:bg-gray-50 cursor-pointer transition-colors">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="User" class="w-9 h-9 rounded-full bg-gray-100 border border-gray-200">
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-semibold text-gray-900 truncate">Alex Morgan</p>
+                    <p class="text-xs text-gray-500 truncate">alex@pennywise.app</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 h-screen overflow-y-auto lg:pl-[240px] relative w-full">
+        <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+            
+            <!-- Header -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                <div class="flex items-center gap-4">
+                    <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-btn bg-white border border-gray-200 text-gray-600 hover:bg-gray-50">
+                        <span class="iconify" data-icon="lucide:menu" data-width="20"></span>
+                    </button>
+                    <div>
+                        <h1 class="text-2xl font-semibold tracking-tight text-gray-900">Savings Goals</h1>
+                        <p class="text-sm text-gray-500 mt-1">Track your progress and reach your financial targets.</p>
+                    </div>
+                </div>
+                <button onclick="openCreateModal()" class="hidden sm:flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-white text-sm font-medium shadow-sm shadow-emerald-500/20 transition-all">
+                    <span class="iconify" data-icon="lucide:plus" data-width="20" style="stroke-width: 2;"></span>
+                    Create Goal
+                </button>
+            </div>
+
+            <!-- Empty State (Hidden by default, structure provided as requested) -->
+            <div id="emptyState" class="hidden flex-col items-center justify-center py-16 text-center bg-white rounded-card border border-dashed border-gray-300">
+                <div class="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mb-4">
+                    <span class="iconify" data-icon="lucide:target" data-width="32"></span>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900 mb-1">Set your first savings goal</h3>
+                <p class="text-gray-500 max-w-sm mb-6">Start saving for your dream car, a vacation, or a rainy day fund.</p>
+                <button onclick="openCreateModal()" class="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-white text-sm font-medium shadow-sm shadow-emerald-500/20 transition-all">
+                    Create Goal
+                </button>
+            </div>
+
+            <!-- Goals Grid -->
+            <div id="goalsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <!-- Card 1: Emergency Fund (On Track) -->
+                <div class="bg-white p-6 rounded-card shadow-card border border-gray-100 flex flex-col hover:border-emerald-200 transition-colors group cursor-pointer">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-3 bg-emerald-50 text-emerald-600 rounded-lg">
+                            <span class="iconify" data-icon="lucide:shield" data-width="24"></span>
+                        </div>
+                        <button class="text-gray-400 hover:text-gray-600 p-1">
+                            <span class="iconify" data-icon="lucide:more-horizontal" data-width="20"></span>
+                        </button>
+                    </div>
+                    
+                    <h3 class="text-lg font-semibold text-gray-900 mb-1 group-hover:text-emerald-600 transition-colors">Emergency Fund</h3>
+                    <p class="text-sm text-gray-500 mb-6">Safety net for unexpected expenses</p>
+                    
+                    <div class="mb-2 flex items-baseline gap-1">
+                        <span class="text-2xl font-bold text-gray-900">$8,500</span>
+                        <span class="text-sm text-gray-500">of $12,000</span>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="w-full bg-gray-100 rounded-full h-2 mb-4 overflow-hidden">
+                        <div class="bg-emerald-500 h-2 rounded-full transition-all duration-500" style="width: 70%"></div>
+                    </div>
+
+                    <div class="mt-auto pt-4 border-t border-gray-50 flex items-center justify-between">
+                        <div class="flex items-center gap-1.5 text-xs font-medium text-gray-500">
+                            <span class="iconify" data-icon="lucide:calendar" data-width="14"></span>
+                            <span>Target: Dec 2024</span>
+                        </div>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700">
+                            On Track
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Card 2: New Car (Warning/Slow) -->
+                <div class="bg-white p-6 rounded-card shadow-card border border-gray-100 flex flex-col hover:border-emerald-200 transition-colors group cursor-pointer">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-3 bg-indigo-50 text-indigo-600 rounded-lg">
+                            <span class="iconify" data-icon="lucide:car" data-width="24"></span>
+                        </div>
+                        <button class="text-gray-400 hover:text-gray-600 p-1">
+                            <span class="iconify" data-icon="lucide:more-horizontal" data-width="20"></span>
+                        </button>
+                    </div>
+                    
+                    <h3 class="text-lg font-semibold text-gray-900 mb-1 group-hover:text-emerald-600 transition-colors">Tesla Model 3</h3>
+                    <p class="text-sm text-gray-500 mb-6">Down payment savings</p>
+                    
+                    <div class="mb-2 flex items-baseline gap-1">
+                        <span class="text-2xl font-bold text-gray-900">$4,200</span>
+                        <span class="text-sm text-gray-500">of $15,000</span>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="w-full bg-gray-100 rounded-full h-2 mb-4 overflow-hidden">
+                        <div class="bg-warning h-2 rounded-full transition-all duration-500" style="width: 28%"></div>
+                    </div>
+
+                    <div class="mt-auto pt-4 border-t border-gray-50 flex items-center justify-between">
+                        <div class="flex items-center gap-1.5 text-xs font-medium text-gray-500">
+                            <span class="iconify" data-icon="lucide:calendar" data-width="14"></span>
+                            <span>Target: Jun 2025</span>
+                        </div>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-50 text-orange-700">
+                            Behind
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Card 3: Summer Vacation -->
+                <div class="bg-white p-6 rounded-card shadow-card border border-gray-100 flex flex-col hover:border-emerald-200 transition-colors group cursor-pointer">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-3 bg-blue-50 text-blue-600 rounded-lg">
+                            <span class="iconify" data-icon="lucide:plane" data-width="24"></span>
+                        </div>
+                        <button class="text-gray-400 hover:text-gray-600 p-1">
+                            <span class="iconify" data-icon="lucide:more-horizontal" data-width="20"></span>
+                        </button>
+                    </div>
+                    
+                    <h3 class="text-lg font-semibold text-gray-900 mb-1 group-hover:text-emerald-600 transition-colors">Japan Trip</h3>
+                    <p class="text-sm text-gray-500 mb-6">Flights and accommodation</p>
+                    
+                    <div class="mb-2 flex items-baseline gap-1">
+                        <span class="text-2xl font-bold text-gray-900">$2,150</span>
+                        <span class="text-sm text-gray-500">of $5,000</span>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="w-full bg-gray-100 rounded-full h-2 mb-4 overflow-hidden">
+                        <div class="bg-emerald-500 h-2 rounded-full transition-all duration-500" style="width: 43%"></div>
+                    </div>
+
+                    <div class="mt-auto pt-4 border-t border-gray-50 flex items-center justify-between">
+                        <div class="flex items-center gap-1.5 text-xs font-medium text-gray-500">
+                            <span class="iconify" data-icon="lucide:calendar" data-width="14"></span>
+                            <span>Target: Aug 2024</span>
+                        </div>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                            120 days left
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Card 4: New Laptop -->
+                <div class="bg-white p-6 rounded-card shadow-card border border-gray-100 flex flex-col hover:border-emerald-200 transition-colors group cursor-pointer">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-3 bg-gray-100 text-gray-600 rounded-lg">
+                            <span class="iconify" data-icon="lucide:laptop" data-width="24"></span>
+                        </div>
+                        <button class="text-gray-400 hover:text-gray-600 p-1">
+                            <span class="iconify" data-icon="lucide:more-horizontal" data-width="20"></span>
+                        </button>
+                    </div>
+                    
+                    <h3 class="text-lg font-semibold text-gray-900 mb-1 group-hover:text-emerald-600 transition-colors">MacBook Pro</h3>
+                    <p class="text-sm text-gray-500 mb-6">Workstation upgrade</p>
+                    
+                    <div class="mb-2 flex items-baseline gap-1">
+                        <span class="text-2xl font-bold text-gray-900">$2,900</span>
+                        <span class="text-sm text-gray-500">of $3,000</span>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="w-full bg-gray-100 rounded-full h-2 mb-4 overflow-hidden">
+                        <div class="bg-emerald-500 h-2 rounded-full transition-all duration-500" style="width: 96%"></div>
+                    </div>
+
+                    <div class="mt-auto pt-4 border-t border-gray-50 flex items-center justify-between">
+                        <div class="flex items-center gap-1.5 text-xs font-medium text-gray-500">
+                            <span class="iconify" data-icon="lucide:calendar" data-width="14"></span>
+                            <span>Target: Nov 2023</span>
+                        </div>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">
+                            Almost there!
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Card 5: Loading State (Skeleton) -->
+                <div class="bg-white p-6 rounded-card shadow-card border border-gray-100 flex flex-col animate-pulse">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-12 h-12 bg-gray-200 rounded-lg"></div>
+                        <div class="w-8 h-8 bg-gray-100 rounded-full"></div>
+                    </div>
+                    
+                    <div class="h-5 bg-gray-200 rounded w-3/4 mb-2"></div>
+                    <div class="h-4 bg-gray-100 rounded w-1/2 mb-6"></div>
+                    
+                    <div class="h-8 bg-gray-200 rounded w-1/3 mb-4"></div>
+
+                    <!-- Skeleton Progress Bar -->
+                    <div class="w-full bg-gray-100 rounded-full h-2 mb-4"></div>
+
+                    <div class="mt-auto pt-4 border-t border-gray-50 flex items-center justify-between">
+                        <div class="h-4 bg-gray-100 rounded w-24"></div>
+                        <div class="h-5 bg-gray-100 rounded-full w-20"></div>
+                    </div>
+                </div>
+
+                <!-- Card 6: Create New (Alternative to header button) -->
+                <button onclick="openCreateModal()" class="group flex flex-col items-center justify-center p-6 rounded-card border-2 border-dashed border-gray-200 hover:border-emerald-500 hover:bg-emerald-50/30 transition-all h-full min-h-[280px]">
+                    <div class="w-12 h-12 rounded-full bg-gray-100 group-hover:bg-white group-hover:text-emerald-500 text-gray-400 flex items-center justify-center mb-4 transition-colors shadow-sm">
+                        <span class="iconify" data-icon="lucide:plus" data-width="24"></span>
+                    </div>
+                    <span class="text-base font-semibold text-gray-900 group-hover:text-emerald-600 transition-colors">Create New Goal</span>
+                    <span class="text-sm text-gray-500 mt-1">Set a new target</span>
+                </button>
+
+            </div>
+        </div>
+
+        <!-- Floating Action Button (Mobile) -->
+        <button onclick="openCreateModal()" class="fixed lg:hidden bottom-6 right-6 w-14 h-14 bg-emerald-500 text-white rounded-full shadow-fab flex items-center justify-center z-40 hover:bg-emerald-600 active:scale-95 transition-all">
+            <span class="iconify" data-icon="lucide:plus" data-width="28"></span>
+        </button>
+
+    </main>
+
+    <!-- Create Goal Modal (Hidden by default) -->
+    <div id="createModal" class="fixed inset-0 z-[60] hidden">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-gray-900/40 backdrop-blur-[2px] transition-opacity duration-300" onclick="closeCreateModal()"></div>
+        
+        <!-- Modal Content -->
+        <div class="absolute inset-0 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 w-full sm:w-[480px] sm:h-auto h-full bg-white sm:rounded-card shadow-xl flex flex-col animate-in fade-in zoom-in duration-200">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+                <h2 class="text-lg font-semibold text-gray-900">Create Savings Goal</h2>
+                <button onclick="closeCreateModal()" class="text-gray-400 hover:text-gray-600 p-2 rounded-full hover:bg-gray-100">
+                    <span class="iconify" data-icon="lucide:x" data-width="20"></span>
+                </button>
+            </div>
+            
+            <div class="p-6 space-y-4 overflow-y-auto">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Goal Name</label>
+                    <input type="text" placeholder="e.g. New Car" class="form-input">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Target Amount</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <span class="text-gray-500">$</span>
+                        </div>
+                        <input type="number" placeholder="0.00" class="form-input pl-7">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Target Date</label>
+                        <input type="date" class="form-input">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Icon</label>
+                        <select class="form-input">
+                            <option>Target</option>
+                            <option>Car</option>
+                            <option>House</option>
+                            <option>Travel</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Description (Optional)</label>
+                    <textarea rows="3" class="form-input resize-none" placeholder="What is this goal for?"></textarea>
+                </div>
+            </div>
+
+            <div class="p-6 border-t border-gray-100 bg-gray-50 rounded-b-card flex justify-end gap-3">
+                <button onclick="closeCreateModal()" class="px-4 py-2.5 rounded-btn border border-gray-200 bg-white text-gray-700 font-medium hover:bg-gray-50 transition-colors">Cancel</button>
+                <button onclick="closeCreateModal()" class="px-4 py-2.5 rounded-lg bg-emerald-500 text-white text-sm font-medium hover:bg-emerald-600 active:bg-emerald-700 shadow-sm shadow-emerald-500/20 transition-all">Create Goal</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+        const createModal = document.getElementById('createModal');
+
+        function toggleSidebar() {
+            const isClosed = sidebar.classList.contains('-translate-x-full');
+            if (isClosed) {
+                sidebar.classList.remove('-translate-x-full');
+                mobileOverlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                mobileOverlay.classList.add('hidden');
+            }
+        }
+
+        function openCreateModal() {
+            createModal.classList.remove('hidden');
+        }
+
+        function closeCreateModal() {
+            createModal.classList.add('hidden');
+        }
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape") {
+                closeCreateModal();
+                if(!sidebar.classList.contains('-translate-x-full')) toggleSidebar();
+            }
+        });
+    </script>
+
+</body></html>

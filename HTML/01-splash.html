@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PennyWise - Loading</title>
+<!-- Fonts: Inter -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Iconify (Lucide Icons) -->
+<script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+<script>
+tailwind.config = {
+theme: {
+extend: {
+fontFamily: {
+sans: ['Inter', 'sans-serif'],
+},
+colors: {
+emerald: {
+500: '#10B981', // Exact match
+600: '#059669',
+}
+},
+animation: {
+'soft-pulse': 'softPulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+'spin-slow': 'spin 1.5s linear infinite',
+'fade-out': 'fadeOut 0.5s ease-out 2.5s forwards',
+'fade-in': 'fadeIn 0.5s ease-out 2.7s forwards',
+},
+keyframes: {
+softPulse: {
+'0%, 100%': { opacity: '1', transform: 'scale(1)' },
+'50%': { opacity: '0.85', transform: 'scale(0.98)' },
+},
+fadeOut: {
+'0%': { opacity: '0.8', transform: 'translateY(0)' },
+'100%': { opacity: '0', transform: 'translateY(-10px)' },
+},
+fadeIn: {
+'0%': { opacity: '0', transform: 'translateY(10px)' },
+'100%': { opacity: '0.8', transform: 'translateY(0)' },
+}
+}
+}
+}
+}
+</script></head>
+<body class="bg-emerald-500 min-h-screen w-full flex flex-col items-center justify-center overflow-hidden selection:bg-white/20">
+
+    <!-- Main Container -->
+    <div class="flex flex-col items-center justify-center p-8">
+        
+        <!-- Logo Section -->
+        <div class="animate-soft-pulse flex flex-col items-center gap-4 mb-12">
+            <!-- Icon Background Circle (Optional subtle glow) -->
+            <div class="relative flex items-center justify-center">
+                <div class="absolute inset-0 bg-white/10 rounded-full blur-xl transform scale-150"></div>
+                <span class="iconify text-white relative z-10 drop-shadow-sm" data-icon="lucide:leaf" data-width="48" data-height="48" style="stroke-width: 1.5;"></span>
+            </div>
+            
+            <!-- Brand Name -->
+            <h1 class="text-3xl font-bold tracking-tight text-white drop-shadow-sm">
+                PennyWise
+            </h1>
+        </div>
+
+        <!-- Loading Indicator Section -->
+        <div class="flex flex-col items-center gap-4">
+            <!-- Custom Spinner -->
+            <div class="w-6 h-6 border-[2.5px] border-white/30 border-t-white rounded-full animate-spin-slow"></div>
+            
+            <!-- Status Text with Transition -->
+            <div class="relative h-6 w-64 text-center">
+                <!-- Initial State -->
+                <p class="absolute inset-x-0 top-0 text-sm font-medium text-white/80 animate-fade-out">
+                    Loading application...
+                </p>
+                
+                <!-- Redirect State (Appears after delay) -->
+                <p class="absolute inset-x-0 top-0 text-sm font-medium text-white/80 opacity-0 animate-fade-in">
+                    Redirecting to login...
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Decorative Background Elements (Subtle Mesh) -->
+    <div class="fixed top-0 left-0 w-full h-full pointer-events-none overflow-hidden z-[-1]">
+        <div class="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-white/5 rounded-full blur-[100px]"></div>
+        <div class="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-emerald-600/20 rounded-full blur-[100px]"></div>
+    </div>
+
+
+</body></html>
