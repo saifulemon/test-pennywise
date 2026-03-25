@@ -1,0 +1,40 @@
+# Node
+**/node_modules/
+**/dist/
+**/build/
+**/.next/
+**/.nuxt/
+
+# Python
+**/__pycache__/
+**/*.pyc
+**/.venv/
+**/venv/
+
+# Environment
+**/.env
+**/.env.local
+**/.env.*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Test coverage
+**/coverage/
+**/.nyc_output/
+
+# Temp files
+*.tmp
+.claude-project/status/temp/*
+!.claude-project/status/temp/.gitkeep
