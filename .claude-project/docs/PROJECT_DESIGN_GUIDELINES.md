@@ -1,9 +1,9 @@
-# Design Guidelines - pennywise
+# Design Guidelines - PennyWise
 
 **Last Updated:** 2026-03-25
 **Source:** Extracted from HTML prototypes in `.claude-project/resources/HTML/`
 
-This document provides comprehensive design system guidelines extracted from your HTML prototypes. Use this as the single source of truth for maintaining design consistency across React components during HTML-to-React conversion.
+This document provides comprehensive design system guidelines extracted from HTML prototypes. Use this as the single source of truth for maintaining design consistency across React components during HTML-to-React conversion.
 
 ---
 
@@ -19,60 +19,62 @@ This document provides comprehensive design system guidelines extracted from you
 8. [Component Patterns](#8-component-patterns)
 9. [Icon System](#9-icon-system)
 10. [Responsive Breakpoints](#10-responsive-breakpoints)
-11. [HR Lines & Dividers](#11-hr-lines--dividers)
-12. [Form Elements](#12-form-elements)
-13. [Accessibility Guidelines](#13-accessibility-guidelines)
+11. [Form Elements](#11-form-elements)
+12. [Budget Progress Indicators](#12-budget-progress-indicators)
 
 ---
 
 ## 1. Color System
 
-### 1.1 Primary Colors
+### 1.1 Primary Colors (Emerald Theme)
 
 | Color Name | Hex Value | Tailwind Class | Usage |
 |------------|-----------|----------------|-------|
-| Primary | [EXTRACTED] | `bg-primary`, `text-primary`, `border-primary` | Main CTA buttons, links, active states |
-| Primary Dark | [EXTRACTED] | `bg-primaryDark`, `hover:bg-primaryDark` | Button hover states, pressed states |
-| Primary Light | [EXTRACTED] | `bg-primaryLight` | Backgrounds, subtle highlights, selected items |
+| Emerald 50 | `#ECFDF5` | `bg-emerald-50` | Very light backgrounds, subtle highlights |
+| Emerald 100 | `#D1FAE5` | `bg-emerald-100` | Light backgrounds, selected items |
+| **Emerald 500 (Primary)** | `#10B981` | `bg-emerald-500`, `text-emerald-500`, `border-emerald-500` | Main CTA buttons, links, active states, brand |
+| Emerald 600 | `#059669` | `bg-emerald-600`, `hover:bg-emerald-600` | Button hover states, darker accents |
+| Emerald 900 | `#064E3B` | `bg-emerald-900` | Dark emerald accents, overlays |
 
-### 1.2 Semantic Colors
-
-| Color Name | Hex Value | Tailwind Class | Usage |
-|------------|-----------|----------------|-------|
-| Success | [EXTRACTED] | `bg-emerald-500`, `text-emerald-600` | Success messages, positive indicators |
-| Warning | [EXTRACTED] | `bg-amber-500`, `text-amber-600` | Warning messages, caution states |
-| Error | [EXTRACTED] | `bg-red-500`, `text-red-600` | Error messages, destructive actions |
-| Info | [EXTRACTED] | `bg-blue-500`, `text-blue-600` | Info messages, neutral highlights |
-
-### 1.3 Neutral Palette
+### 1.2 Neutral Palette (Gray Scale)
 
 | Color Name | Hex Value | Tailwind Class | Usage |
 |------------|-----------|----------------|-------|
-| Dark | [EXTRACTED] | `bg-slate-900`, `text-slate-900` | Dark backgrounds (admin sidebar), headings |
-| Slate 850 | [EXTRACTED] | `bg-slate-850` | Secondary dark backgrounds |
-| Gray 700 | [EXTRACTED] | `text-gray-700` | Body text, labels |
-| Gray 600 | [EXTRACTED] | `text-gray-600` | Secondary text |
-| Gray 400 | [EXTRACTED] | `text-gray-400`, `placeholder-gray-400` | Placeholders, muted text |
-| Gray 200 | [EXTRACTED] | `border-gray-200` | Borders, dividers |
-| Gray 100 | [EXTRACTED] | `bg-gray-100` | Light backgrounds |
-| Gray 50 | [EXTRACTED] | `bg-gray-50` | Subtle backgrounds, hover states |
-| White | `#FFFFFF` | `bg-white`, `text-white` | Backgrounds, button text |
+| Gray 50 | `#F9FAFB` | `bg-gray-50` | Page backgrounds, subtle backgrounds |
+| Gray 100 | `#F3F4F6` | `bg-gray-100` | Card backgrounds, hover states |
+| Gray 200 | `#E5E7EB` | `border-gray-200` | Borders, dividers |
+| Gray 300 | `#D1D5DB` | `border-gray-300` | Input borders, inactive states |
+| Gray 400 | `#9CA3AF` | `text-gray-400`, `placeholder-gray-400` | Placeholders, muted text, icons |
+| Gray 500 | `#6B7280` | `text-gray-500` | Secondary text |
+| Gray 600 | `#4B5563` | `text-gray-600` | Body text, labels |
+| Gray 700 | `#374151` | `text-gray-700` | Headings, emphasized text |
+| Gray 800 | `#1F2937` | `text-gray-800`, `bg-gray-800` | Dark text, dark backgrounds |
+| Gray 900 | `#111827` | `text-gray-900` | Primary text, main headings |
+| White | `#FFFFFF` | `bg-white`, `text-white` | Cards, backgrounds, button text |
 
-### 1.4 State-Specific Colors
+### 1.3 Semantic Colors
 
-| State | Base Color | Hover | Focus | Active | Disabled |
-|-------|------------|-------|-------|--------|----------|
-| Primary Button | [EXTRACTED] | [EXTRACTED] | [EXTRACTED] | [EXTRACTED] | [EXTRACTED] |
-| Secondary Button | [EXTRACTED] | [EXTRACTED] | [EXTRACTED] | [EXTRACTED] | [EXTRACTED] |
-| Input Field | [EXTRACTED] | [EXTRACTED] | [EXTRACTED] | - | [EXTRACTED] |
-| Link | [EXTRACTED] | [EXTRACTED] | [EXTRACTED] | [EXTRACTED] | [EXTRACTED] |
+| Color Name | Hex Value | Tailwind Class | Usage |
+|------------|-----------|----------------|-------|
+| Success (Green) | `#10B981` | `text-emerald-600`, `bg-emerald-50` | Income transactions, success states |
+| Error (Red) | `#EF4444` | `text-red-600`, `bg-red-50`, `border-red-500` | Expense transactions, errors, alerts |
+| Warning (Yellow) | `#F59E0B` | `text-yellow-600`, `bg-yellow-50` | Warnings, budget at 80-100% |
+| Info (Blue) | `#3B82F6` | `text-blue-600`, `bg-blue-50` | Info messages, neutral highlights |
+
+### 1.4 Budget Status Colors
+
+| Status | Color | Tailwind Class | Usage |
+|--------|-------|----------------|-------|
+| Under 80% | Green | `bg-emerald-500` | Safe spending zone |
+| 80-100% | Yellow | `bg-yellow-500` | Warning zone |
+| Over 100% | Red | `bg-red-500` | Overspent |
 
 ### 1.5 Color Usage Guidelines
 
-- **Primary Color**: Use for main actions, CTAs, and brand elements
-- **Semantic Colors**: Reserve for status indicators and alerts
-- **Neutral Grays**: Use for text hierarchy, backgrounds, and UI structure
-- **Avoid Hardcoding**: Always use Tailwind classes or CSS custom properties, never hardcode hex values in components
+- **Primary Color (Emerald #10B981)**: Use for main actions, CTAs, brand elements, income indicators
+- **Red**: Use for expenses, overspending alerts, destructive actions
+- **Gray Scale**: Use for text hierarchy, backgrounds, and UI structure
+- **Avoid Hardcoding**: Always use Tailwind classes, never hardcode hex values
 
 ---
 
@@ -80,12 +82,10 @@ This document provides comprehensive design system guidelines extracted from you
 
 ### 2.1 Font Families
 
-| Type | Font Family | Weights Available | Tailwind Class |
-|------|-------------|-------------------|----------------|
-| Primary | [EXTRACTED from HTML] | 400, 500, 600, 700, 800 | `font-sans` |
-| Monospace | [EXTRACTED or Mono] | 400, 500, 600 | `font-mono` |
-
-**CDN Link:** [EXTRACTED from HTML <link> tags]
+| Type | Font Family | Weights Available | Tailwind Class | CDN Link |
+|------|-------------|-------------------|----------------|----------|
+| Primary (Sans) | **Inter** | 400, 500, 600, 700 | `font-sans` | `https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700` |
+| Monospace | **JetBrains Mono** | 400, 500 | `font-mono` | `https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500` |
 
 ### 2.2 Font Size Scale
 

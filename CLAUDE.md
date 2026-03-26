@@ -117,19 +117,26 @@ docker-compose down            # Stop services
 
 ### Documentation
 - `.claude-project/docs/PROJECT_KNOWLEDGE.md` - Architecture, tech stack, security
-- `.claude-project/docs/PROJECT_API.md` - Complete API reference
-- `.claude-project/docs/PROJECT_DATABASE.md` - Database schema, ERD
-- `.claude-project/prd/prd.pdf` - Full PRD document
+- `.claude-project/docs/PROJECT_API.md` - Complete API reference (40+ endpoints)
+- `.claude-project/docs/PROJECT_DATABASE.md` - Database schema, ERD (8 tables)
+- `.claude-project/docs/PROJECT_DESIGN_GUIDELINES.md` - Design system (colors, typography, components)
+- `.claude-project/docs/FRONTEND_AUTH_FLOW.md` - Authentication flows (login, signup, OAuth, password reset)
+- `.claude-project/docs/PROJECT_API_INTEGRATION.md` - Frontend-to-API mapping (20 pages)
+- `.claude-project/prd/prd.pdf` - Full PRD document (15 pages)
 
 ### Resources
-- `.claude-project/resources/HTML/` - HTML prototypes (auth, user, admin, modals)
+- `.claude-project/resources/HTML/` - HTML prototypes:
+  - **Auth**: 5 screens (splash, login, signup, forgot password, reset password)
+  - **User**: 9 screens (dashboard, budgets, transactions, goals, analytics, settings)
+  - **Admin**: 6 screens (dashboard, users, categories, analytics, tickets, settings)
+  - **Modals**: 5 components (create budget, add transaction, create goal, add contribution, delete confirmation)
 - `.claude-project/status/` - Task tracking per component
 - `.claude-project/memory/` - Session memory
 
 ### Code
-- `backend/src/modules/` - Feature modules (auth, budgets, transactions, goals)
-- `backend/src/entities/` - TypeORM entities
-- `frontend/src/pages/` - Page components
+- `backend/src/modules/` - Feature modules (auth, budgets, transactions, goals, categories, analytics, admin)
+- `backend/src/entities/` - TypeORM entities (User, Category, Transaction, Budget, SavingsGoal, Contribution, SupportTicket)
+- `frontend/src/pages/` - Page components (20 screens total)
 - `frontend/src/components/` - Reusable components
 
 ## Common Tasks
@@ -157,10 +164,12 @@ docker-compose down            # Stop services
 - Password hashing: bcrypt with salt rounds 10+
 
 ### Design System (from HTML prototypes)
-- **Font**: Inter (sans), JetBrains Mono (mono)
-- **Primary Color**: Emerald (#10B981)
-- **Icons**: Iconify (Lucide icon set)
-- **CSS Framework**: TailwindCSS 4
+- **Fonts**: Inter (sans-serif, weights 400-700), JetBrains Mono (monospace, 400-500)
+- **Primary Color**: Emerald #10B981 (green theme for income/safe budgets)
+- **Icons**: Iconify with Lucide icon set (via CDN)
+- **CSS Framework**: TailwindCSS 4 (CDN in prototypes)
+- **Budget Colors**: Green (<80%), Yellow (80-100%), Red (>100%)
+- **Layout**: Responsive grid, sidebar navigation, card-based design
 
 ### Conventions
 - **Branches**: `main` (production), `dev` (active development)
